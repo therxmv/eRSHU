@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">єРДГУ</string>
+
+    <!--Profile-->
+    <string name="profile_specialty">Про спеціальність</string>
+    <string name="profile_choose_specialty">Виберіть Вашу спеціальність</string>
+    <string name="profile_choose_year">Виберіть Ваш курс</string>
+
+    <string name="profile_continue_label">ⓘ Заповніть всі поля щоб продовжити</string>
+    <string name="profile_continue">Продовжити</string>
+
+    <!--Schedule-->
+    <string name="schedule_title">Розклад для</string>
+
+    <string name="schedule_monday">Понеділок</string>
+    <string name="schedule_tuesday">Вівторок</string>
+    <string name="schedule_wednesday">Середа</string>
+    <string name="schedule_thursday">Четвер</string>
+    <string name="schedule_friday">П'ятниця</string>
+    <string name="schedule_saturday">Субота</string>
+    <string name="schedule_unknown_day">Невідомий день</string>
+
+    <string name="schedule_no_lesson">Немає</string>
+    <string name="schedule_no_lessons">Сьогодні немає занять</string>
+
+    <string name="calls_schedule_title">Розклад дзвінків</string>
+    <string name="calls_schedule_first_shift">Перша зміна</string>
+    <string name="calls_schedule_second_shift">Друга зміна</string>
+    <string name="calls_schedule_copy">Копіювати</string>
+    <string name="calls_schedule_close">Закрити</string>
+
+</resources>

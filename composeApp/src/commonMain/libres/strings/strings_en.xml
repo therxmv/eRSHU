@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">eRSHU</string>
+
+    <!--Profile-->
+    <string name="profile_about">About me</string>
+    <string name="profile_enter_first_name">Enter your first name</string>
+    <string name="profile_enter_second_name">Enter your second name</string>
+
+    <string name="profile_specialty">About specialty</string>
+    <string name="profile_choose_specialty">Choose your specialty</string>
+    <string name="profile_choose_year">Choose your year</string>
+
+    <string name="profile_continue_label">ⓘ Fill all fields to continue</string>
+    <string name="profile_continue">Continue</string>
+
+    <!--Schedule-->
+    <string name="schedule_title">Schedule for</string>
+
+    <string name="schedule_monday">Monday</string>
+    <string name="schedule_tuesday">Tuesday</string>
+    <string name="schedule_wednesday">Wednesday</string>
+    <string name="schedule_thursday">Thursday</string>
+    <string name="schedule_friday">Friday</string>
+    <string name="schedule_saturday">Saturday</string>
+    <string name="schedule_unknown_day">Unknown day</string>
+
+    <string name="schedule_no_lesson">None</string>
+    <string name="schedule_no_lessons">No lessons today</string>
+
+    <string name="calls_schedule_title">Calls schedule</string>
+    <string name="calls_schedule_first_shift">First shift</string>
+    <string name="calls_schedule_second_shift">Second shift</string>
+    <string name="calls_schedule_copy">Copy</string>
+    <string name="calls_schedule_close">Close</string>
+
 </resources>

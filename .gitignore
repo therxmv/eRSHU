@@ -13,3 +13,7 @@ xcuserdata/
 Pods/
 *.jks
 *yarn.lock
+/composeApp/release/composeApp-release.apk
+/composeApp/release/output-metadata.json
+/iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+/composeApp/src/commonMain/kotlin/com/therxmv/ershu/data/source/remote/BaseUrlProvider.kt

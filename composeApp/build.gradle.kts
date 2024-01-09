@@ -48,8 +48,9 @@ kotlin {
             implementation(libs.ktor.core)
             implementation(libs.composeIcons.featherIcons)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.multiplatformSettings)
             implementation(libs.koin.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
 
         commonTest.dependencies {
@@ -62,6 +63,7 @@ kotlin {
             implementation(libs.compose.uitooling)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
         }
 
         jvmMain.dependencies {
@@ -101,6 +103,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
 }
 
 compose.desktop {
@@ -127,6 +135,5 @@ tasks.getByPath("jvmSourcesJar").dependsOn("libresGenerateResources")
 tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
 
 buildConfig {
-    // BuildConfig configuration here.
-    // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
+
 }
