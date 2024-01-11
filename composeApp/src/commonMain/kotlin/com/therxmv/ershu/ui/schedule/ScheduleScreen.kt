@@ -4,8 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,6 +41,7 @@ import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.theme.ERSHUShapes
 import com.therxmv.ershu.ui.schedule.ScheduleViewModel.Companion.isDialogOpen
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
+import com.therxmv.ershu.ui.schedule.utils.mapWithGroups
 import com.therxmv.ershu.utils.isValidLink
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Copy
@@ -97,12 +100,15 @@ class ScheduleScreen(
                     uiState.schedule!!.week.forEachIndexed { index, lessonModels ->
                         scheduleDayItem(
                             dayName = viewModel.getDayOfWeek(index + 1),
-                            scheduleList = lessonModels,
+                            scheduleList = lessonModels.mapWithGroups(),
                             isExpanded = uiState.expandedList[index],
                             onDayClick = {
                                 viewModel.onEvent(ScheduleUiEvent.ExpandDay(index))
                             },
                         )
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(100.dp))
                     }
                 }
             }
