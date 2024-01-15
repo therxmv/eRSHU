@@ -63,7 +63,7 @@ class ProfileScreen : Screen {
                     .fillMaxWidth()
                     .padding(top = 12.dp),
                 isExpanded = isYearExpanded,
-                input = uiState.selectedYear?.toString() ?: "",
+                input = uiState.selectedYear ?: "",
                 placeholder = Res.string.profile_choose_year,
                 onExpandedChange = {
                     isYearExpanded = it
@@ -81,7 +81,7 @@ class ProfileScreen : Screen {
                         },
                         onClick = {
                             viewModel.onEvent(
-                                ProfileUiEvent.SelectYear(it.toIntOrNull())
+                                ProfileUiEvent.SelectYear(it)
                             )
                             isYearExpanded = false
                         }
@@ -104,7 +104,7 @@ class ProfileScreen : Screen {
                 },
                 isEnabled = uiState.selectedYear != null
             ) {
-                uiState.getSpecialties().forEach { item ->
+                uiState.getSpecialties()?.forEach { item ->
                     val text = item.specialtyName
 
                     DropdownMenuItem(
@@ -133,11 +133,15 @@ class ProfileScreen : Screen {
                 modifier = Modifier.fillMaxWidth(),
                 enabled = uiState.isFieldsFilled(),
                 onClick = {
-                    navigator.push(
-                        ScheduleScreen.createScreen(
-                            uiState.selectedYear,
-                            uiState.selectedSpecialty?.specialtyName,
-                        )
+                    viewModel.onEvent(
+                        ProfileUiEvent.Continue {
+                            navigator.push(
+                                ScheduleScreen.createScreen(
+                                    uiState.selectedYear,
+                                    uiState.selectedSpecialty?.specialtyName,
+                                )
+                            )
+                        }
                     )
                 },
             ) {

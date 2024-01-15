@@ -312,6 +312,7 @@
 					"${inherited}",
 					"-framework",
 					ComposeApp,
+					"-lsqlite3",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.therxmv.ershu.iosApp;
 				PRODUCT_NAME = eRSHU;
@@ -350,6 +351,7 @@
 					"${inherited}",
 					"-framework",
 					ComposeApp,
+					"-lsqlite3",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.therxmv.ershu.iosApp;
 				PRODUCT_NAME = eRSHU;

@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,9 +48,7 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Copy
 import dev.icerock.moko.mvvm.compose.getViewModel
 import dev.icerock.moko.mvvm.compose.viewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.update
 
 class ScheduleScreen(
     val year: String,
@@ -57,8 +56,8 @@ class ScheduleScreen(
 ) : Screen {
 
     companion object {
-        fun createScreen(year: Int?, specialty: String?) = ScheduleScreen(
-            year?.toString().orEmpty(),
+        fun createScreen(year: String?, specialty: String?) = ScheduleScreen(
+            year.orEmpty(),
             specialty.orEmpty(),
         )
 
@@ -66,8 +65,8 @@ class ScheduleScreen(
     }
 
     fun toggleDialog() {
-        CoroutineScope(Dispatchers.Default).launch {
-            isDialogOpen.emit(isDialogOpen.value.not())
+        isDialogOpen.update {
+            it.not()
         }
     }
 
@@ -96,19 +95,32 @@ class ScheduleScreen(
                     .fillMaxSize()
                     .padding(start = 24.dp, end = 24.dp, bottom = 12.dp),
             ) {
-                LazyColumn {
-                    uiState.schedule!!.week.forEachIndexed { index, lessonModels ->
-                        scheduleDayItem(
-                            dayName = viewModel.getDayOfWeek(index + 1),
-                            scheduleList = lessonModels.mapWithGroups(),
-                            isExpanded = uiState.expandedList[index],
-                            onDayClick = {
-                                viewModel.onEvent(ScheduleUiEvent.ExpandDay(index))
-                            },
+                if (uiState.schedule!!.week.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            text = Res.string.schedule_no_connection,
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
                         )
                     }
-                    item {
-                        Spacer(modifier = Modifier.height(100.dp))
+                } else {
+                    LazyColumn {
+                        uiState.schedule!!.week.forEachIndexed { index, lessonModels ->
+                            scheduleDayItem(
+                                dayName = viewModel.getDayOfWeek(index + 1),
+                                scheduleList = lessonModels.mapWithGroups(),
+                                isExpanded = uiState.expandedList[index],
+                                onDayClick = {
+                                    viewModel.onEvent(ScheduleUiEvent.ExpandDay(index))
+                                },
+                            )
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(100.dp))
+                        }
                     }
                 }
             }

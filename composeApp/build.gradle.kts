@@ -1,5 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
@@ -7,6 +5,7 @@ plugins {
     alias(libs.plugins.libres)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
@@ -16,13 +15,6 @@ kotlin {
                 jvmTarget = "17"
             }
         }
-    }
-
-    jvm()
-
-    js {
-        browser()
-        binaries.executable()
     }
 
     listOf(
@@ -51,6 +43,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.sqlDelight.coroutines.extensions)
         }
 
         commonTest.dependencies {
@@ -64,20 +57,12 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
-        }
-
-        jvmMain.dependencies {
-            implementation(compose.desktop.common)
-            implementation(compose.desktop.currentOs)
-            implementation(libs.ktor.client.okhttp)
-        }
-
-        jsMain.dependencies {
-            implementation(compose.html.core)
+            implementation(libs.sqlDelight.android)
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.sqlDelight.native)
         }
 
     }
@@ -111,29 +96,18 @@ android {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.therxmv.ershu.desktopApp"
-            packageVersion = "1.0.0"
-        }
-    }
-}
-
-compose.experimental {
-    web.application {}
-}
-
 libres {
     // https://github.com/Skeptick/libres#setup
 }
-tasks.getByPath("jvmProcessResources").dependsOn("libresGenerateResources")
-tasks.getByPath("jvmSourcesJar").dependsOn("libresGenerateResources")
-tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
 
 buildConfig {
 
+}
+
+sqldelight {
+    databases {
+        create("ERSHUDatabase") {
+            packageName.set("com.therxmv.ershu.db")
+        }
+    }
 }

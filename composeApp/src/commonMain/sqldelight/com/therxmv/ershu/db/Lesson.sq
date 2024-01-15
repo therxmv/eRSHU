@@ -1,0 +1,17 @@
+CREATE TABLE Lesson (
+    name TEXT,
+    number TEXT,
+    link TEXT,
+    dayOfWeek TEXT,
+    specialty TEXT
+);
+
+getAllSchedule:
+SELECT Lesson.* FROM Lesson WHERE specialty = ?;
+
+setSchedule:
+INSERT INTO Lesson(name, number, link, dayOfWeek, specialty)
+VALUES (?, ?, ?, ?, ?);
+
+clearSchedule:
+DELETE FROM Lesson WHERE specialty = ?;

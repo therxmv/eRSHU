@@ -1,0 +1,14 @@
+CREATE TABLE Calls (
+    shift TEXT,
+    time TEXT
+);
+
+getAllCalls:
+SELECT Calls.* FROM Calls WHERE shift = ?;
+
+setCall:
+INSERT INTO Calls(shift, time)
+VALUES (?, ?);
+
+clearCalls:
+DELETE FROM Calls;

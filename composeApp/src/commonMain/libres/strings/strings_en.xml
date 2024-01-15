@@ -27,6 +27,10 @@
     <string name="schedule_no_lesson">None</string>
     <string name="schedule_no_lessons">No lessons today</string>
 
+    <string name="schedule_no_connection">Oops... Something went wrong. Check your connection and
+        try again
+    </string>
+
     <string name="calls_schedule_title">Calls schedule</string>
     <string name="calls_schedule_first_shift">First shift</string>
     <string name="calls_schedule_second_shift">Second shift</string>

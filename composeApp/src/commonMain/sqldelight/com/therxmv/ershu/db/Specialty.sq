@@ -1,0 +1,14 @@
+CREATE TABLE Specialty (
+    year TEXT,
+    name TEXT
+);
+
+getAllSpecialties:
+SELECT Specialty.* FROM Specialty;
+
+setSpecialty:
+INSERT INTO Specialty(year, name)
+VALUES (?, ?);
+
+clearSpecialties:
+DELETE FROM Specialty;

@@ -23,6 +23,10 @@
     <string name="schedule_no_lesson">Немає</string>
     <string name="schedule_no_lessons">Сьогодні немає занять</string>
 
+    <string name="schedule_no_connection">Упс... Щось пішло не так. Перевірте з'єднання і спробуйте
+        ще раз
+    </string>
+
     <string name="calls_schedule_title">Розклад дзвінків</string>
     <string name="calls_schedule_first_shift">Перша зміна</string>
     <string name="calls_schedule_second_shift">Друга зміна</string>

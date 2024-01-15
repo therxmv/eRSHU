@@ -4,13 +4,17 @@ import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
 import com.therxmv.ershu.data.models.ScheduleModel
+import com.therxmv.ershu.data.source.local.database.ERSHUDatabase
+import com.therxmv.ershu.data.source.local.database.ERSHUDatabaseApi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 
-class ERSHUService : ERSHUApi {
+class ERSHUService(
+    private val ershuDatabaseApi: ERSHUDatabaseApi = ERSHUDatabase(),
+) : ERSHUApi {
 
     private val apiUrl = BaseUrlProvider.getUrl()
 
@@ -23,10 +27,13 @@ class ERSHUService : ERSHUApi {
     override suspend fun getAllSpecialties() = try {
         httpClient
             .get("$apiUrl/all_specialty")
-            .body()
+            .body<AllSpecialtiesModel>()
+            .also {
+                ershuDatabaseApi.setAllSpecialties(it)
+            }
     } catch (e: Exception) {
         e.printStackTrace()
-        AllSpecialtiesModel()
+        ershuDatabaseApi.getAllSpecialties() ?: AllSpecialtiesModel()
     }
 
     override suspend fun getSchedule(year: String, specialty: String) = try {
@@ -36,9 +43,12 @@ class ERSHUService : ERSHUApi {
             .apply {
                 week = week.map { it.distinct() }
             }
+            .also {
+                ershuDatabaseApi.setSchedule(it, specialty)
+            }
     } catch (e: Exception) {
         e.printStackTrace()
-        ScheduleModel()
+        ershuDatabaseApi.getSchedule(specialty) ?: ScheduleModel()
     }
 
     override suspend fun getCallSchedule() = try {
@@ -50,9 +60,11 @@ class ERSHUService : ERSHUApi {
             .get("$apiUrl/time/2")
             .body<CallScheduleModel>()
 
-        AllCallsScheduleModel(first, second)
+        AllCallsScheduleModel(first, second).also {
+            ershuDatabaseApi.setAllCalls(it)
+        }
     } catch (e: Exception) {
         e.printStackTrace()
-        AllCallsScheduleModel()
+        ershuDatabaseApi.getAllCalls() ?: AllCallsScheduleModel()
     }
 }

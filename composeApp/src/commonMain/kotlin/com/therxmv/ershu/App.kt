@@ -49,5 +49,3 @@ fun Navigator.getAppBarTitle() = when(this.lastItem) {
     is ScheduleScreen -> "${Res.string.schedule_title} ${(this.lastItem as ScheduleScreen).specialty}"
     else -> Res.string.app_name
 }
-
-internal expect fun openUrl(url: String?)

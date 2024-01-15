@@ -1,0 +1,15 @@
+CREATE TABLE Profile (
+    name TEXT,
+    year TEXT,
+    specialty TEXT
+);
+
+getUserInfo:
+SELECT Profile.* FROM Profile WHERE name = ?;
+
+setUserInfo:
+INSERT INTO Profile(name, year, specialty)
+VALUES(?, ?, ?);
+
+clearUserInfo:
+DELETE FROM Profile;
