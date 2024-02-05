@@ -7,7 +7,14 @@ data class ProfileUiState(
     val selectedYear: String? = null,
     val specialtiesList: List<List<SpecialtyModel>> = emptyList(),
     val selectedSpecialty: SpecialtyModel? = null,
+    val isOffline: Boolean = false
 ) {
+    fun getYears() = yearsList.filter { year ->
+        year.toIntOrNull()?.let {
+            specialtiesList[it - 1].firstOrNull()?.specialtyName.isNullOrEmpty().not()
+        } ?: false
+    }
+
     fun getSpecialties() = selectedYear?.toIntOrNull()?.let {
         specialtiesList[it - 1]
     }

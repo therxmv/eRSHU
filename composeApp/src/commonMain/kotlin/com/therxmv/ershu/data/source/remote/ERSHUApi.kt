@@ -5,7 +5,7 @@ import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.ScheduleModel
 
 interface ERSHUApi {
-    suspend fun getAllSpecialties(): AllSpecialtiesModel
-    suspend fun getSchedule(year: String, specialty: String): ScheduleModel
-    suspend fun getCallSchedule(): AllCallsScheduleModel
+    suspend fun getAllSpecialties(): Result<AllSpecialtiesModel>
+    suspend fun getSchedule(year: String, specialty: String): Result<ScheduleModel>
+    suspend fun getCallSchedule(): Result<AllCallsScheduleModel>
 }

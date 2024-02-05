@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.sqlDelight)
+    alias(libs.plugins.firebase)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 kotlin {
@@ -36,7 +38,6 @@ kotlin {
             implementation(libs.libres)
             implementation(libs.voyager.navigator)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.moko.mvvm)
             implementation(libs.ktor.core)
             implementation(libs.composeIcons.featherIcons)
             implementation(libs.kotlinx.serialization.json)
@@ -58,6 +59,10 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
             implementation(libs.sqlDelight.android)
+
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation("com.google.firebase:firebase-analytics")
+            implementation("com.google.firebase:firebase-crashlytics")
         }
 
         iosMain.dependencies {
@@ -77,8 +82,8 @@ android {
         targetSdk = 34
 
         applicationId = "com.therxmv.ershu.androidApp"
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 101
+        versionName = "1.0.1"
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -92,6 +97,8 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }

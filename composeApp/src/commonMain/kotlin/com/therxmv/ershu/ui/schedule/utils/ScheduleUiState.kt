@@ -8,4 +8,5 @@ data class ScheduleUiState(
     val callsSchedule: AllCallsScheduleModel? = null,
     val expandedList: List<Boolean> = emptyList(),
     val isDialogOpen: Boolean = false,
+    val isOffline: Boolean = false,
 )

@@ -1,21 +1,21 @@
 package com.therxmv.ershu.ui.profile
 
-import com.therxmv.ershu.data.source.local.profile.ProfileLocalSource
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
-import com.therxmv.ershu.data.source.remote.ERSHUService
+import com.therxmv.ershu.data.source.remote.isFailure
 import com.therxmv.ershu.ui.profile.utils.ProfileUiEvent
 import com.therxmv.ershu.ui.profile.utils.ProfileUiState
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val ershuApi: ERSHUApi = ERSHUService(),
-    private val profileLocalSourceApi: ProfileLocalSourceApi = ProfileLocalSource(),
-) : ViewModel() {
+    private val ershuApi: ERSHUApi,
+    private val profileLocalSourceApi: ProfileLocalSourceApi,
+) : ScreenModel {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -50,8 +50,9 @@ class ProfileViewModel(
     }
 
     private fun loadAllSpecialties() {
-        viewModelScope.launch {
-            val allSpecialties = ershuApi.getAllSpecialties()
+        screenModelScope.launch {
+            val result = ershuApi.getAllSpecialties()
+            val allSpecialties = result.value
             val yearsList = List(allSpecialties.allYears.size) { index ->
                 "${index + 1}"
             }
@@ -64,6 +65,7 @@ class ProfileViewModel(
                     selectedYear = yearsList.firstOrNull { it == profile?.year },
                     specialtiesList = allSpecialties.allYears,
                     selectedSpecialty = allSpecialties.allYears.flatten().firstOrNull { it.specialtyName == profile?.specialty },
+                    isOffline = result.isFailure(),
                 )
             }
         }

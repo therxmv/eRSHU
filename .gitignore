@@ -17,3 +17,6 @@ Pods/
 /composeApp/release/output-metadata.json
 /iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 /composeApp/src/commonMain/kotlin/com/therxmv/ershu/data/source/remote/BaseUrlProvider.kt
+/composeApp/google-services.json
+/iosApp/iosApp/Info.plist
+/iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved

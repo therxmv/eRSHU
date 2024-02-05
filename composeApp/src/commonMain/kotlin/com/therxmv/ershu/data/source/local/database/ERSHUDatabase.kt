@@ -12,7 +12,7 @@ import com.therxmv.ershu.db.Lesson
 import com.therxmv.ershu.db.Specialty
 
 class ERSHUDatabase(
-    databaseDriverFactory: DatabaseDriverFactory = DatabaseDriverFactory(),
+    databaseDriverFactory: DatabaseDriverFactory,
 ) : ERSHUDatabaseApi {
 
     companion object {

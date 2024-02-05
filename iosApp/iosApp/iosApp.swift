@@ -1,9 +1,11 @@
 import UIKit
 import SwiftUI
 import ComposeApp
+import FirebaseCore
 
 @main
 struct iosApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     init() {
         HelperKt.doInitKoin()
@@ -28,4 +30,13 @@ struct ComposeView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+
+    return true
+  }
 }

@@ -1,19 +1,20 @@
 package com.therxmv.ershu.ui.schedule
 
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.source.remote.ERSHUApi
-import com.therxmv.ershu.data.source.remote.ERSHUService
+import com.therxmv.ershu.data.source.remote.isFailure
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ScheduleViewModel(
-    private val ershuApi: ERSHUApi = ERSHUService(),
-) : ViewModel() {
+    private val ershuApi: ERSHUApi,
+) : ScreenModel {
 
     companion object {
         val isDialogOpen = MutableStateFlow(false)
@@ -33,15 +34,17 @@ class ScheduleViewModel(
     }
 
     fun loadSchedule(year: String, specialty: String) {
-        viewModelScope.launch {
-            val schedule = ershuApi.getSchedule(year, specialty)
-            val callsSchedule = ershuApi.getCallSchedule()
+        screenModelScope.launch {
+            val result = ershuApi.getSchedule(year, specialty)
+            val schedule = result.value
+            val callsSchedule = ershuApi.getCallSchedule().value
 
             _uiState.update {
                 it.copy(
                     schedule = schedule,
                     callsSchedule = callsSchedule,
                     expandedList = schedule.week.map { false },
+                    isOffline = result.isFailure(),
                 )
             }
         }

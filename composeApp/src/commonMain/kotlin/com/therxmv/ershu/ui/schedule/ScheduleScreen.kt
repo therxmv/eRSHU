@@ -39,15 +39,15 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.LessonModel
+import com.therxmv.ershu.di.getScreenModel
 import com.therxmv.ershu.theme.ERSHUShapes
 import com.therxmv.ershu.ui.schedule.ScheduleViewModel.Companion.isDialogOpen
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
 import com.therxmv.ershu.ui.schedule.utils.mapWithGroups
+import com.therxmv.ershu.ui.views.OfflineBanner
 import com.therxmv.ershu.utils.isValidLink
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Copy
-import dev.icerock.moko.mvvm.compose.getViewModel
-import dev.icerock.moko.mvvm.compose.viewModelFactory
 import kotlinx.coroutines.flow.update
 
 class ScheduleScreen(
@@ -60,8 +60,6 @@ class ScheduleScreen(
             year.orEmpty(),
             specialty.orEmpty(),
         )
-
-        private const val VIEW_MODEL_KEY = "ScheduleViewModel"
     }
 
     fun toggleDialog() {
@@ -72,7 +70,7 @@ class ScheduleScreen(
 
     @Composable
     override fun Content() {
-        val viewModel = getViewModel(VIEW_MODEL_KEY, viewModelFactory { ScheduleViewModel() })
+        val viewModel = getScreenModel<ScheduleViewModel>()
         val uiState by viewModel.uiState.collectAsState()
 
         val callsDialogState = isDialogOpen.collectAsState().value
@@ -89,48 +87,54 @@ class ScheduleScreen(
             }
         }
 
-        if (uiState.schedule != null) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 24.dp, end = 24.dp, bottom = 12.dp),
-            ) {
-                if (uiState.schedule!!.week.isEmpty()) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Text(
-                            text = Res.string.schedule_no_connection,
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                } else {
-                    LazyColumn {
-                        uiState.schedule!!.week.forEachIndexed { index, lessonModels ->
-                            scheduleDayItem(
-                                dayName = viewModel.getDayOfWeek(index + 1),
-                                scheduleList = lessonModels.mapWithGroups(),
-                                isExpanded = uiState.expandedList[index],
-                                onDayClick = {
-                                    viewModel.onEvent(ScheduleUiEvent.ExpandDay(index))
-                                },
+        Column {
+            if (uiState.isOffline) {
+                OfflineBanner()
+            }
+
+            if (uiState.schedule != null) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 24.dp, end = 24.dp, bottom = 12.dp),
+                ) {
+                    if (uiState.schedule!!.week.isEmpty()) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(
+                                text = Res.string.schedule_no_connection,
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Center,
                             )
                         }
-                        item {
-                            Spacer(modifier = Modifier.height(100.dp))
+                    } else {
+                        LazyColumn {
+                            uiState.schedule!!.week.forEachIndexed { index, lessonModels ->
+                                scheduleDayItem(
+                                    dayName = viewModel.getDayOfWeek(index + 1),
+                                    scheduleList = lessonModels.mapWithGroups(),
+                                    isExpanded = uiState.expandedList[index],
+                                    onDayClick = {
+                                        viewModel.onEvent(ScheduleUiEvent.ExpandDay(index))
+                                    },
+                                )
+                            }
+                            item {
+                                Spacer(modifier = Modifier.height(100.dp))
+                            }
                         }
                     }
                 }
-            }
-        } else {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                CircularProgressIndicator()
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }

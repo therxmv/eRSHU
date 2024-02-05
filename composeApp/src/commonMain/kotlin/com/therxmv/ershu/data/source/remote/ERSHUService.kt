@@ -4,67 +4,79 @@ import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
 import com.therxmv.ershu.data.models.ScheduleModel
-import com.therxmv.ershu.data.source.local.database.ERSHUDatabase
 import com.therxmv.ershu.data.source.local.database.ERSHUDatabaseApi
+import com.therxmv.ershu.data.source.remote.BaseUrlProvider.HEADER_NAME
+import com.therxmv.ershu.data.source.remote.BaseUrlProvider.getHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
-import io.ktor.serialization.kotlinx.json.json
+import io.ktor.client.request.header
 
 class ERSHUService(
-    private val ershuDatabaseApi: ERSHUDatabaseApi = ERSHUDatabase(),
+    private val httpClient: HttpClient,
+    private val ershuDatabaseApi: ERSHUDatabaseApi,
 ) : ERSHUApi {
 
     private val apiUrl = BaseUrlProvider.getUrl()
 
-    private val httpClient = HttpClient {
-        install(ContentNegotiation) {
-            json()
-        }
-    }
-
     override suspend fun getAllSpecialties() = try {
-        httpClient
-            .get("$apiUrl/all_specialty")
-            .body<AllSpecialtiesModel>()
-            .also {
-                ershuDatabaseApi.setAllSpecialties(it)
-            }
+        Result.Success(
+            httpClient
+                .get("$apiUrl/all_specialty") {
+                    header(HEADER_NAME, getHeader())
+                }
+                .body<AllSpecialtiesModel>()
+                .also {
+                    ershuDatabaseApi.setAllSpecialties(it)
+                }
+        )
     } catch (e: Exception) {
-        e.printStackTrace()
-        ershuDatabaseApi.getAllSpecialties() ?: AllSpecialtiesModel()
+        Result.Failure(
+            ershuDatabaseApi.getAllSpecialties() ?: AllSpecialtiesModel()
+        )
     }
 
     override suspend fun getSchedule(year: String, specialty: String) = try {
-        httpClient
-            .get("$apiUrl/${year}/${specialty}")
-            .body<ScheduleModel>()
-            .apply {
-                week = week.map { it.distinct() }
-            }
-            .also {
-                ershuDatabaseApi.setSchedule(it, specialty)
-            }
+        Result.Success(
+            httpClient
+                .get("$apiUrl/${year}/${specialty}") {
+                    header(HEADER_NAME, getHeader())
+                }
+                .body<ScheduleModel>()
+                .apply {
+                    week = week.map { it.distinct() }
+                }
+                .also {
+                    ershuDatabaseApi.setSchedule(it, specialty)
+                }
+        )
     } catch (e: Exception) {
-        e.printStackTrace()
-        ershuDatabaseApi.getSchedule(specialty) ?: ScheduleModel()
+        Result.Failure(
+            ershuDatabaseApi.getSchedule(specialty) ?: ScheduleModel()
+        )
     }
 
     override suspend fun getCallSchedule() = try {
         val first = httpClient
-            .get("$apiUrl/time/1")
+            .get("$apiUrl/time/1") {
+                header(HEADER_NAME, getHeader())
+            }
             .body<CallScheduleModel>()
 
         val second = httpClient
-            .get("$apiUrl/time/2")
+            .get("$apiUrl/time/2") {
+                header(HEADER_NAME, getHeader())
+            }
             .body<CallScheduleModel>()
 
-        AllCallsScheduleModel(first, second).also {
-            ershuDatabaseApi.setAllCalls(it)
-        }
+        Result.Success(
+            AllCallsScheduleModel(first, second).also {
+                ershuDatabaseApi.setAllCalls(it)
+            }
+        )
     } catch (e: Exception) {
-        e.printStackTrace()
-        ershuDatabaseApi.getAllCalls() ?: AllCallsScheduleModel()
+        Result.Failure(
+            ershuDatabaseApi.getAllCalls() ?: AllCallsScheduleModel()
+        )
     }
 }

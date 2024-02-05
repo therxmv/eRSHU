@@ -26,6 +26,7 @@
     <string name="schedule_no_connection">Упс... Щось пішло не так. Перевірте з'єднання і спробуйте
         ще раз
     </string>
+    <string name="offline_title">Ви перебуваєте в офлайн режимі</string>
 
     <string name="calls_schedule_title">Розклад дзвінків</string>
     <string name="calls_schedule_first_shift">Перша зміна</string>
