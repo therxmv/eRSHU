@@ -1,0 +1,20 @@
+CREATE TABLE Faculty (
+    name TEXT,
+    folder TEXT
+);
+
+DROP TABLE Profile;
+DROP TABLE Specialty;
+
+CREATE TABLE Profile (
+    name TEXT,
+    year TEXT,
+    faculty TEXT,
+    specialty TEXT
+);
+
+CREATE TABLE Specialty (
+    year TEXT,
+    name TEXT,
+    faculty TEXT
+);

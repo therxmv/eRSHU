@@ -1,14 +1,15 @@
 CREATE TABLE Specialty (
     year TEXT,
-    name TEXT
+    name TEXT,
+    faculty TEXT
 );
 
 getAllSpecialties:
-SELECT Specialty.* FROM Specialty;
+SELECT Specialty.* FROM Specialty WHERE faculty = ?;
 
 setSpecialty:
-INSERT INTO Specialty(year, name)
-VALUES (?, ?);
+INSERT INTO Specialty(year, name, faculty)
+VALUES (?, ?, ?);
 
 clearSpecialties:
-DELETE FROM Specialty;
+DELETE FROM Specialty WHERE faculty = ?;

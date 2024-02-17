@@ -10,8 +10,9 @@ import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import com.therxmv.ershu.theme.AppTheme
 import com.therxmv.ershu.ui.profile.ProfileScreen
-import com.therxmv.ershu.ui.schedule.ScheduleScreen
 import com.therxmv.ershu.ui.views.ERSHUAppBar
+import com.therxmv.ershu.ui.views.ScreenTitleProvider
+import com.therxmv.ershu.ui.views.calls.CallsScreen
 
 @Composable
 internal fun App() = AppTheme {
@@ -41,11 +42,11 @@ internal fun App() = AppTheme {
 }
 
 fun Navigator.getBellClick() = when(this.lastItem) {
-    is ScheduleScreen -> (this.lastItem as ScheduleScreen)::toggleDialog
+    is CallsScreen -> (this.lastItem as CallsScreen)::toggleDialog
     else -> null
 }
 
 fun Navigator.getAppBarTitle() = when(this.lastItem) {
-    is ScheduleScreen -> "${Res.string.schedule_title} ${(this.lastItem as ScheduleScreen).specialty}"
+    is ScreenTitleProvider -> (this.lastItem as ScreenTitleProvider).getTitle()
     else -> Res.string.app_name
 }

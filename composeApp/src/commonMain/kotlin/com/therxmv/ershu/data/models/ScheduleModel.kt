@@ -10,7 +10,7 @@ data class ScheduleModel(
 
 @Serializable
 data class LessonModel(
-    @SerialName("lesson_name") val lessonName: String?,
-    @SerialName("lesson_number") val lessonNumber: String,
-    @SerialName("link") val link: String?,
+    @SerialName("lesson_name") val lessonName: String? = null,
+    @SerialName("lesson_number") val lessonNumber: String? = null,
+    @SerialName("link") val link: String? = null,
 )

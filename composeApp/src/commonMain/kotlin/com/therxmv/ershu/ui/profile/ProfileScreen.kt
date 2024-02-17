@@ -1,22 +1,17 @@
 package com.therxmv.ershu.ui.profile
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -26,28 +21,40 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.di.getScreenModel
+import com.therxmv.ershu.ui.profile.utils.ProfileDropdown
+import com.therxmv.ershu.ui.profile.utils.ProfileDropdown.FACULTY
+import com.therxmv.ershu.ui.profile.utils.ProfileDropdown.SPECIALTY
+import com.therxmv.ershu.ui.profile.utils.ProfileDropdown.YEAR
 import com.therxmv.ershu.ui.profile.utils.ProfileUiEvent
 import com.therxmv.ershu.ui.profile.views.DropDown
 import com.therxmv.ershu.ui.profile.views.InputTitle
 import com.therxmv.ershu.ui.schedule.ScheduleScreen
 import com.therxmv.ershu.ui.views.OfflineBanner
+import com.therxmv.ershu.ui.views.ProgressIndicator
+import com.therxmv.ershu.ui.views.calls.CallsDialog
+import com.therxmv.ershu.ui.views.calls.CallsScreen
 
-class ProfileScreen : Screen {
+class ProfileScreen : Screen, CallsScreen() {
 
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<ProfileViewModel>()
         val uiState by viewModel.uiState.collectAsState()
+        val callsDialogState = isDialogOpen.collectAsState().value
+
+        val isFacultyExpanded = uiState.dropdownExpandedMap[FACULTY] == true
+        val isYearExpanded = uiState.dropdownExpandedMap[YEAR] == true
+        val isSpecialtyExpanded = uiState.dropdownExpandedMap[SPECIALTY] == true
 
         val navigator = LocalNavigator.currentOrThrow
         val focusManager = LocalFocusManager.current
 
-        var isSpecialtyExpanded by remember {
-            mutableStateOf(false)
-        }
-
-        var isYearExpanded by remember {
-            mutableStateOf(false)
+        if (callsDialogState) {
+            CallsDialog(
+                uiState.callsSchedule,
+            ) {
+                toggleDialog()
+            }
         }
 
         Column {
@@ -55,29 +62,71 @@ class ProfileScreen : Screen {
                 OfflineBanner()
             }
 
-            if (uiState.yearsList.isNotEmpty()) {
+            if (uiState.facultiesList.isNotEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 24.dp, end = 24.dp, bottom = 12.dp)
                 ) {
-
                     InputTitle(Res.string.profile_specialty)
+
+                    DropDown(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp),
+                        isExpanded = isFacultyExpanded,
+                        input = uiState.selectedFaculty?.facultyName.orEmpty(),
+                        placeholder = Res.string.profile_choose_faculty,
+                        onExpandedChange = {
+                            viewModel.toggleDropdown(FACULTY, it)
+                        },
+                        onDismissRequest = {
+                            viewModel.toggleDropdown(FACULTY)
+                            focusManager.clearFocus()
+                        },
+                    ) {
+                        uiState.facultiesList.forEach {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = it.facultyName)
+                                },
+                                onClick = {
+                                    viewModel.onEvent(
+                                        ProfileUiEvent.SelectFaculty(it)
+                                    )
+                                    viewModel.toggleDropdown(FACULTY)
+                                }
+                            )
+                        }
+                    }
+
+                    Button(
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(top = 12.dp),
+                        enabled = uiState.isFacultyButtonEnabled,
+                        onClick = {
+                            viewModel.onEvent(ProfileUiEvent.LoadSpecialties)
+                        },
+                    ) {
+                        Text(text = Res.string.profile_select)
+                    }
+
                     DropDown(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 12.dp),
                         isExpanded = isYearExpanded,
-                        input = uiState.selectedYear ?: "",
+                        input = uiState.selectedYear.orEmpty(),
                         placeholder = Res.string.profile_choose_year,
                         onExpandedChange = {
-                            isYearExpanded = it
+                            viewModel.toggleDropdown(YEAR, it)
                         },
                         onDismissRequest = {
-                            isYearExpanded = false
+                            viewModel.toggleDropdown(YEAR)
                             focusManager.clearFocus()
                         },
-                        isEnabled = true,
+                        isEnabled = uiState.yearsList.isNotEmpty(),
                     ) {
                         uiState.getYears().forEach {
                             DropdownMenuItem(
@@ -88,7 +137,7 @@ class ProfileScreen : Screen {
                                     viewModel.onEvent(
                                         ProfileUiEvent.SelectYear(it)
                                     )
-                                    isYearExpanded = false
+                                    viewModel.toggleDropdown(YEAR)
                                 }
                             )
                         }
@@ -101,10 +150,10 @@ class ProfileScreen : Screen {
                         input = uiState.selectedSpecialty?.specialtyName.orEmpty(),
                         placeholder = Res.string.profile_choose_specialty,
                         onExpandedChange = {
-                            isSpecialtyExpanded = it
+                            viewModel.toggleDropdown(SPECIALTY, it)
                         },
                         onDismissRequest = {
-                            isSpecialtyExpanded = false
+                            viewModel.toggleDropdown(SPECIALTY)
                             focusManager.clearFocus()
                         },
                         isEnabled = uiState.selectedYear != null
@@ -120,7 +169,7 @@ class ProfileScreen : Screen {
                                     viewModel.onEvent(
                                         ProfileUiEvent.SelectSpecialty(item)
                                     )
-                                    isSpecialtyExpanded = false
+                                    viewModel.toggleDropdown(SPECIALTY)
                                 }
                             )
                         }
@@ -142,6 +191,7 @@ class ProfileScreen : Screen {
                                 ProfileUiEvent.Continue {
                                     navigator.push(
                                         ScheduleScreen.createScreen(
+                                            uiState.selectedFaculty?.folderName,
                                             uiState.selectedYear,
                                             uiState.selectedSpecialty?.specialtyName,
                                         )
@@ -154,14 +204,12 @@ class ProfileScreen : Screen {
                     }
                 }
             } else {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    CircularProgressIndicator()
-                }
+                ProgressIndicator()
             }
         }
     }
+}
+
+private fun ProfileViewModel.toggleDropdown(dropdown: ProfileDropdown, value: Boolean = false) {
+    onEvent(ProfileUiEvent.ToggleDropdownState(dropdown, value))
 }

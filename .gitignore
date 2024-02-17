@@ -20,3 +20,5 @@ Pods/
 /composeApp/google-services.json
 /iosApp/iosApp/Info.plist
 /iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+/iosApp/GoogleService-Info.plist
+/composeApp/release/composeApp-release.aab

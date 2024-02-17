@@ -1,13 +1,22 @@
 package com.therxmv.ershu.utils
 
 import com.therxmv.ershu.data.models.AllCallsScheduleModel
+import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
+import com.therxmv.ershu.data.models.FacultyModel
 import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.models.ScheduleModel
 import com.therxmv.ershu.data.models.SpecialtyModel
 
 object MockData {
+    val allFacultiesModel = AllFacultiesModel(
+        listOf(
+            FacultyModel("ФМІ", "fmi_schedule"),
+            FacultyModel("ППФ", "ppf_schedule"),
+        )
+    )
+
     val allSpecialtyModel = AllSpecialtiesModel(
         allYears = listOf(
             listOf(),
@@ -32,29 +41,29 @@ object MockData {
         listOf(
             listOf(
                 LessonModel(lessonName = null, lessonNumber = "1", link = null),
-                LessonModel(lessonName = "Інтернет речей доц. Шинкарчук Н.В.", lessonNumber = "2", link = "https://meet.google.com/aam-bmke-eon"),
-                LessonModel(lessonName = "Інтернет речей доц. Шинкарчук Н.В.", lessonNumber = "3", link = "https://meet.google.com/aam-bmke-eon"),
-                LessonModel(lessonName = "Інтернет речей доц. Шинкарчук Н.В.", lessonNumber = "4", link = "https://meet.google.com/aam-bmke-eon")
+                LessonModel(lessonName = "Інтернет речей доц. Викладач Н.В.", lessonNumber = "2", link = "https://meet.google.com/aam-bmke-eon"),
+                LessonModel(lessonName = "Інтернет речей доц. Викладач Н.В.", lessonNumber = "3", link = "https://meet.google.com/aam-bmke-eon"),
+                LessonModel(lessonName = "Інтернет речей доц. Викладач Н.В.", lessonNumber = "4", link = "https://meet.google.com/aam-bmke-eon")
             ),
             listOf(
-                LessonModel(lessonName = "Системний аналіз та теорія прийняття рішень доц.Мороз І.П.", lessonNumber = "1", link = "https://us04web.zoom.us/j/4546240462?pwd=QTFnOWlkY1hSbDk2c0FXQVBPL1ZiUT09"),
-                LessonModel(lessonName = "Системний аналіз та теорія прийняття рішень доц. Мороз І.П.", lessonNumber = "2", link = "https://us04web.zoom.us/j/4546240462?pwd=QTFnOWlkY1hSbDk2c0FXQVBPL1ZiUT09"),
-                LessonModel(lessonName = "Інтернет речей доц. Шинкарчук Н.В.", lessonNumber = "3", link = "https://meet.google.com/aam-bmke-eon"),
-                LessonModel(lessonName = "Інтернет речей доц. Шинкарчук Н.В.", lessonNumber = "4", link = "https://meet.google.com/aam-bmke-eon")
+                LessonModel(lessonName = "Системний аналіз та теорія прийняття рішень доц. Викладач І.П.", lessonNumber = "1", link = "https://us04web.zoom.us/j/4546240462?pwd=QTFnOWlkY1hSbDk2c0FXQVBPL1ZiUT09"),
+                LessonModel(lessonName = "Системний аналіз та теорія прийняття рішень доц. Викладач І.П.", lessonNumber = "2", link = "https://us04web.zoom.us/j/4546240462?pwd=QTFnOWlkY1hSbDk2c0FXQVBPL1ZiUT09"),
+                LessonModel(lessonName = "Інтернет речей доц. Викладач Н.В.", lessonNumber = "3", link = "https://meet.google.com/aam-bmke-eon"),
+                LessonModel(lessonName = "Інтернет речей доц. Викладач Н.В.", lessonNumber = "4", link = "https://meet.google.com/aam-bmke-eon")
             ),
             listOf(),
             listOf(
-                LessonModel(lessonName = "Операційні системи ст.в. Ляшук Т.Г.", lessonNumber = "1", link = "https://meet.google.com/kqk-dqbq-mjr"),
-                LessonModel(lessonName = "Операційні системи ст.в. Ляшук Т.Г.", lessonNumber = "2", link = "https://meet.google.com/kqk-dqbq-mjr"),
-                LessonModel(lessonName = "Системний аналіз та теорія прийняття рішень доц. Мороз І.П.", lessonNumber = "3", link = "https://us04web.zoom.us/j/4546240462?pwd=QTFnOWlkY1hSbDk2c0FXQVBPL1ZiUT09"),
-                LessonModel(lessonName = "Інтернет речей доц. Шинкарчук Н.В.", lessonNumber = "4", link = "https://meet.google.com/aam-bmke-eon")
+                LessonModel(lessonName = "Операційні системи ст.в. Викладач Т.Г.", lessonNumber = "1", link = "https://meet.google.com/kqk-dqbq-mjr"),
+                LessonModel(lessonName = "Операційні системи ст.в. Викладач Т.Г.", lessonNumber = "2", link = "https://meet.google.com/kqk-dqbq-mjr"),
+                LessonModel(lessonName = "Системний аналіз та теорія прийняття рішень доц. Викладач І.П.", lessonNumber = "3", link = "https://us04web.zoom.us/j/4546240462?pwd=QTFnOWlkY1hSbDk2c0FXQVBPL1ZiUT09"),
+                LessonModel(lessonName = "Інтернет речей доц. Викладач Н.В.", lessonNumber = "4", link = "https://meet.google.com/aam-bmke-eon")
             ),
             listOf(
-                LessonModel(lessonName = "Системне програмування ст.в. Ляшук Т.Г.", lessonNumber = "1", link = "https://meet.google.com/kqk-dqbq-mjr"),
-                LessonModel(lessonName = "Системне програмування ст.в. Ляшук Т.Г.", lessonNumber = "2", link = "https://meet.google.com/kqk-dqbq-mjr"),
+                LessonModel(lessonName = "Системне програмування ст.в. Викладач Т.Г.", lessonNumber = "1", link = "https://meet.google.com/kqk-dqbq-mjr"),
+                LessonModel(lessonName = "Системне програмування ст.в. Викладач Т.Г.", lessonNumber = "2", link = "https://meet.google.com/kqk-dqbq-mjr"),
                 LessonModel(lessonName = null, lessonNumber = "3", link = null),
-                LessonModel(lessonName = "Адміністрування баз даних проф. Турбал Ю.В.", lessonNumber = "4", link = "https://meet.google.com/xyc-chmy-yhh"),
-                LessonModel(lessonName = "Адміністрування баз даних проф. Турбал Ю.В.", lessonNumber = "5", link = "https://meet.google.com/xyc-chmy-yhh")
+                LessonModel(lessonName = "Адміністрування баз даних проф. Викладач Ю.В.", lessonNumber = "4", link = "https://meet.google.com/xyc-chmy-yhh"),
+                LessonModel(lessonName = "Адміністрування баз даних проф. Викладач Ю.В.", lessonNumber = "5", link = "https://meet.google.com/xyc-chmy-yhh")
             ),
             listOf()
         )

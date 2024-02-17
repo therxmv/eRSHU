@@ -8,6 +8,7 @@ import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
 import com.therxmv.ershu.data.source.remote.ERSHUService
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import org.koin.dsl.module
@@ -30,6 +31,10 @@ val dataModule = module {
         HttpClient {
             install(ContentNegotiation) {
                 json()
+            }
+
+            install(HttpTimeout) {
+                requestTimeoutMillis = 4000
             }
         }
     }

@@ -8,7 +8,7 @@ class ProfileLocalSource(
 
     override fun getProfileInfo() = ershuDatabaseApi.getProfileInfo()
 
-    override fun setProfileInfo(year: String?, specialty: String?) {
-        ershuDatabaseApi.setProfileInfo(year, specialty)
+    override fun setProfileInfo(year: String?, faculty: String?, specialty: String?) {
+        ershuDatabaseApi.setProfileInfo(year, faculty, specialty)
     }
 }

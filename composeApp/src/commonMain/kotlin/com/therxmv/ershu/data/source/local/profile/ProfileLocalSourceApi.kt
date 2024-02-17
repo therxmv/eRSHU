@@ -4,5 +4,5 @@ import com.therxmv.ershu.db.Profile
 
 interface ProfileLocalSourceApi {
     fun getProfileInfo(): Profile?
-    fun setProfileInfo(year: String?, specialty: String?)
+    fun setProfileInfo(year: String?, faculty: String?, specialty: String?)
 }

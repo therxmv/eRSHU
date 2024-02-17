@@ -1,0 +1,14 @@
+CREATE TABLE Faculty (
+    name TEXT,
+    folder TEXT
+);
+
+getAllFaculties:
+SELECT Faculty.* FROM Faculty;
+
+setFaculty:
+INSERT INTO Faculty(name, folder)
+VALUES (?, ?);
+
+clearFaculties:
+DELETE FROM Faculty;

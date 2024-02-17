@@ -6,6 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextOverflow
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.Bell
@@ -20,7 +21,11 @@ fun ERSHUAppBar(
 ) {
     CenterAlignedTopAppBar(
         title = {
-            Text(text = title)
+            Text(
+                text = title,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
         },
         navigationIcon = {
             if (canPop) {

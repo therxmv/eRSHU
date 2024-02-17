@@ -16,10 +16,6 @@ class ScheduleViewModel(
     private val ershuApi: ERSHUApi,
 ) : ScreenModel {
 
-    companion object {
-        val isDialogOpen = MutableStateFlow(false)
-    }
-
     private val _uiState = MutableStateFlow(ScheduleUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -30,14 +26,15 @@ class ScheduleViewModel(
         4 -> Res.string.schedule_thursday
         5 -> Res.string.schedule_friday
         6 -> Res.string.schedule_saturday
+        7 -> Res.string.schedule_sunday
         else -> Res.string.schedule_unknown_day
     }
 
-    fun loadSchedule(year: String, specialty: String) {
+    fun loadSchedule(facultyPath: String, year: String, specialty: String) {
         screenModelScope.launch {
-            val result = ershuApi.getSchedule(year, specialty)
+            val result = ershuApi.getSchedule(facultyPath, year, specialty)
             val schedule = result.value
-            val callsSchedule = ershuApi.getCallSchedule().value
+            val callsSchedule = ershuApi.getLocalCallSchedule().value
 
             _uiState.update {
                 it.copy(

@@ -7,11 +7,13 @@
     <string name="profile_enter_second_name">Enter your second name</string>
 
     <string name="profile_specialty">About specialty</string>
+    <string name="profile_choose_faculty">Choose your faculty</string>
     <string name="profile_choose_specialty">Choose your specialty</string>
     <string name="profile_choose_year">Choose your year</string>
 
     <string name="profile_continue_label">ⓘ Fill all fields to continue</string>
     <string name="profile_continue">Continue</string>
+    <string name="profile_select">Select</string>
 
     <!--Schedule-->
     <string name="schedule_title">Schedule for</string>
@@ -22,10 +24,11 @@
     <string name="schedule_thursday">Thursday</string>
     <string name="schedule_friday">Friday</string>
     <string name="schedule_saturday">Saturday</string>
+    <string name="schedule_sunday">Sunday</string>
     <string name="schedule_unknown_day">Unknown day</string>
 
     <string name="schedule_no_lesson">None</string>
-    <string name="schedule_no_lessons">No lessons today</string>
+    <string name="schedule_no_lessons">No lessons</string>
 
     <string name="schedule_no_connection">Oops... Something went wrong. Check your connection and
         try again

@@ -1,15 +1,14 @@
 package com.therxmv.ershu.data.source.local.database
 
 import com.therxmv.ershu.data.models.AllCallsScheduleModel
+import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
-import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.models.ScheduleModel
-import com.therxmv.ershu.data.models.SpecialtyModel
 import com.therxmv.ershu.data.source.local.DatabaseDriverFactory
+import com.therxmv.ershu.data.source.local.mapper.toDomain
 import com.therxmv.ershu.db.ERSHUDatabase
 import com.therxmv.ershu.db.Lesson
-import com.therxmv.ershu.db.Specialty
 
 class ERSHUDatabase(
     databaseDriverFactory: DatabaseDriverFactory,
@@ -28,38 +27,43 @@ class ERSHUDatabase(
         .getUserInfo(DEFAULT_NAME)
         .executeAsOneOrNull()
 
-    override fun setProfileInfo(year: String?, specialty: String?) {
+    override fun setProfileInfo(year: String?, faculty: String?, specialty: String?) {
         clearUserInfo()
-        database.profileQueries.setUserInfo(name = DEFAULT_NAME, year = year, specialty = specialty)
+        database.profileQueries.setUserInfo(
+            name = DEFAULT_NAME,
+            year = year,
+            faculty = faculty,
+            specialty = specialty
+        )
     }
 
     override fun clearUserInfo() {
         database.profileQueries.clearUserInfo()
     }
 
-    override fun getAllSpecialties() = AllSpecialtiesModel(
+    override fun getAllSpecialties(faculty: String?) = AllSpecialtiesModel(
         database.specialtyQueries
-            .getAllSpecialties()
+            .getAllSpecialties(faculty)
             .executeAsList()
             .groupBy { it.year }.values.toList()
             .map { it.map { item -> item.toDomain() } }
     )
 
-    override fun setAllSpecialties(allSpecialtiesModel: AllSpecialtiesModel) {
-        clearSpecialties()
+    override fun setAllSpecialties(allSpecialtiesModel: AllSpecialtiesModel, faculty: String?) {
+        clearSpecialties(faculty)
         allSpecialtiesModel.allYears.forEachIndexed { index, list ->
             if (list.isEmpty()) {
-                database.specialtyQueries.setSpecialty("${index + 1}", "")
+                database.specialtyQueries.setSpecialty("${index + 1}", "", faculty)
             } else {
                 list.forEach { item ->
-                    database.specialtyQueries.setSpecialty("${index + 1}", item.specialtyName)
+                    database.specialtyQueries.setSpecialty("${index + 1}", item.specialtyName, faculty)
                 }
             }
         }
     }
 
-    override fun clearSpecialties() {
-        database.specialtyQueries.clearSpecialties()
+    override fun clearSpecialties(faculty: String?) {
+        database.specialtyQueries.clearSpecialties(faculty)
     }
 
     override fun getSchedule(specialty: String) = ScheduleModel(
@@ -112,13 +116,24 @@ class ERSHUDatabase(
         database.callsQueries.clearCalls()
     }
 
+    override fun getAllFaculties() = AllFacultiesModel(
+        database.facultyQueries.getAllFaculties().executeAsList().map { it.toDomain() }
+    )
+
+    override fun setAllFaculties(allFacultiesModel: AllFacultiesModel) {
+        clearFaculties()
+        allFacultiesModel.allFaculties.forEach {
+            database.facultyQueries.setFaculty(it.facultyName, it.folderName)
+        }
+    }
+
+    override fun clearFaculties() {
+        database.facultyQueries.clearFaculties()
+    }
+
     private fun List<Lesson>.validate() = if (this.size <= 1) {
         this.filter { it.name.isNullOrEmpty().not() }
     } else {
         this
     }
-
-    private fun Specialty.toDomain() = SpecialtyModel(this.name.orEmpty())
-
-    private fun Lesson.toDomain() = LessonModel(this.name, this.number.orEmpty(), this.link)
 }

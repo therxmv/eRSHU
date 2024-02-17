@@ -65,7 +65,7 @@ fun DropDown(
     input: String,
     placeholder: String,
     onDismissRequest: () -> Unit,
-    isEnabled: Boolean,
+    isEnabled: Boolean = true,
     items: @Composable (ColumnScope.() -> Unit)
 ) {
     ExposedDropdownMenuBox(

@@ -1,5 +1,6 @@
 package com.therxmv.ershu.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import platform.UIKit.UIApplication
@@ -15,3 +16,6 @@ internal actual fun SystemAppearance(isDark: Boolean) {
         )
     }
 }
+
+@Composable
+internal actual fun getDynamicColorSchemes(): Pair<ColorScheme?, ColorScheme?> = Pair(null, null)
