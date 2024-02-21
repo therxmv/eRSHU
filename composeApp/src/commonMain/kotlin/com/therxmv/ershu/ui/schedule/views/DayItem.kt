@@ -40,7 +40,7 @@ fun LazyListScope.dayItem(
                     onDayClick()
                 },
             colors = getDayItemColor(isEmpty),
-            shape = if (isExpanded) expandedScheduleDayShape else scheduleDayShape,
+            shape = if (isExpanded && isEmpty.not()) expandedScheduleDayShape else scheduleDayShape,
         ) {
             Text(
                 modifier = Modifier.padding(16.dp),

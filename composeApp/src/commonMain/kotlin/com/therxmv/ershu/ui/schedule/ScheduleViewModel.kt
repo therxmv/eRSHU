@@ -3,10 +3,13 @@ package com.therxmv.ershu.ui.schedule
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.therxmv.ershu.Res
+import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.source.remote.ERSHUApi
 import com.therxmv.ershu.data.source.remote.isFailure
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState
+import com.therxmv.ershu.utils.toInt
+import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -40,7 +43,7 @@ class ScheduleViewModel(
                 it.copy(
                     schedule = schedule,
                     callsSchedule = callsSchedule,
-                    expandedList = schedule.week.map { false },
+                    expandedList = schedule.week.getExpandedList(),
                     isOffline = result.isFailure(),
                 )
             }
@@ -59,6 +62,16 @@ class ScheduleViewModel(
                     )
                 }
             }
+        }
+    }
+
+    private fun List<List<LessonModel>>.getExpandedList(): List<Boolean> {
+        val date = GMTDate()
+        val isNextDay = date.hours >= 15
+        val currentDay = date.dayOfWeek.ordinal + isNextDay.toInt()
+
+        return List(this.size) { index ->
+            currentDay == index
         }
     }
 }
