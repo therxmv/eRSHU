@@ -1,12 +1,8 @@
 package com.therxmv.ershu.ui.schedule.utils
 
-import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.ScheduleModel
 
-data class ScheduleUiState(
-    val schedule: ScheduleModel? = null,
-    val callsSchedule: AllCallsScheduleModel? = null,
-    val expandedList: List<Boolean> = emptyList(),
-    val isDialogOpen: Boolean = false,
-    val isOffline: Boolean = false,
-)
+sealed interface ScheduleUiState {
+    data object Loading : ScheduleUiState
+    data class Success(val schedule: ScheduleModel) : ScheduleUiState
+}

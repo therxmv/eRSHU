@@ -10,10 +10,4 @@ object ERSHUShapes {
         bottomEnd = 8.dp,
         bottomStart = 8.dp
     )
-
-    val scheduleDayShape: Shape = RoundedCornerShape(8.dp)
-    val expandedScheduleDayShape: Shape = RoundedCornerShape(
-        topEnd = 8.dp,
-        topStart = 8.dp,
-    )
 }

@@ -1,31 +1,26 @@
 package com.therxmv.ershu.ui.schedule
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.di.getScreenModel
-import com.therxmv.ershu.ui.views.ProgressIndicator
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
-import com.therxmv.ershu.ui.schedule.utils.mapWithGroups
-import com.therxmv.ershu.ui.schedule.views.dayItem
-import com.therxmv.ershu.ui.views.calls.CallsDialog
+import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState.Success
+import com.therxmv.ershu.ui.schedule.views.ScheduleList
 import com.therxmv.ershu.ui.views.OfflineBanner
+import com.therxmv.ershu.ui.views.ProgressIndicator
 import com.therxmv.ershu.ui.views.ScreenTitleProvider
+import com.therxmv.ershu.ui.views.calls.CallsDialog
 import com.therxmv.ershu.ui.views.calls.CallsScreen
 
 class ScheduleScreen(
@@ -45,64 +40,49 @@ class ScheduleScreen(
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<ScheduleViewModel>()
-        val uiState by viewModel.uiState.collectAsState()
 
-        val callsDialogState = isDialogOpen.collectAsState().value
+        val uiState by viewModel.uiState.collectAsState()
+        val callsDialogState by isDialogOpen.collectAsState()
+        val expandedState by viewModel.expandedList.collectAsState()
+        val callsScheduleState by viewModel.callsScheduleState.collectAsState()
+        val isOffline by viewModel.isOffline.collectAsState()
 
         LaunchedEffect(Unit) {
-            viewModel.loadSchedule(facultyPath, year, specialty)
+            viewModel.loadData(facultyPath, year, specialty)
         }
 
         if (callsDialogState) {
-            CallsDialog(
-                uiState.callsSchedule,
-            ) {
+            CallsDialog(callsScheduleState) {
                 toggleDialog()
             }
         }
 
-        Column {
-            if (uiState.isOffline) {
-                OfflineBanner()
+        AnimatedContent(
+            targetState = uiState,
+            transitionSpec = {
+                slideInVertically(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessMediumLow,
+                    )
+                ) { it / 2 } + fadeIn() togetherWith fadeOut()
             }
-
-            if (uiState.schedule != null) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 24.dp, end = 24.dp, bottom = 12.dp),
-                ) {
-                    if (uiState.schedule!!.week.isEmpty()) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Text(
-                                text = Res.string.schedule_no_connection,
-                                style = MaterialTheme.typography.titleLarge,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                    } else {
-                        LazyColumn {
-                            uiState.schedule!!.week.forEachIndexed { index, lessonModels ->
-                                dayItem(
-                                    dayName = viewModel.getDayOfWeek(index + 1),
-                                    scheduleList = lessonModels.mapWithGroups(),
-                                    isExpanded = uiState.expandedList[index],
-                                    onDayClick = {
-                                        viewModel.onEvent(ScheduleUiEvent.ExpandDay(index))
-                                    },
-                                )
-                            }
-                            item {
-                                Spacer(modifier = Modifier.height(100.dp))
-                            }
-                        }
+        ) { state ->
+            when (state) {
+                is Success -> {
+                    if (isOffline) {
+                        OfflineBanner()
                     }
+
+                    ScheduleList(
+                        schedule = (uiState as Success).schedule.week,
+                        dayName = { viewModel.getDayOfWeek(it) },
+                        onDayClick = { viewModel.onEvent(ScheduleUiEvent.ExpandDay(it)) },
+                        isExpanded = { expandedState.getOrNull(it) == true }
+                    )
                 }
-            } else {
-                ProgressIndicator()
+
+                else -> ProgressIndicator()
             }
         }
     }

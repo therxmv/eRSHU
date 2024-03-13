@@ -1,11 +1,11 @@
 package com.therxmv.ershu.ui.profile.views
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -58,15 +58,17 @@ fun Input(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDown(
+fun <T> DropDown(
     modifier: Modifier,
     isExpanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     input: String,
     placeholder: String,
     onDismissRequest: () -> Unit,
+    itemList: List<T>?,
+    itemTitle: (T) -> String,
+    onItemClick: (T) -> Unit,
     isEnabled: Boolean = true,
-    items: @Composable (ColumnScope.() -> Unit)
 ) {
     ExposedDropdownMenuBox(
         expanded = isExpanded,
@@ -97,7 +99,17 @@ fun DropDown(
             modifier = Modifier.exposedDropdownSize(),
             expanded = isExpanded && isEnabled,
             onDismissRequest = onDismissRequest,
-            content = items,
-        )
+        ) {
+            itemList?.forEach {
+                DropdownMenuItem(
+                    text = {
+                        Text(text = itemTitle(it))
+                    },
+                    onClick = {
+                        onItemClick(it)
+                    }
+                )
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.LessonModel
-import com.therxmv.ershu.theme.ERSHUShapes.lessonShape
 import com.therxmv.ershu.theme.ERSHUShapes.lastLessonShape
+import com.therxmv.ershu.theme.ERSHUShapes.lessonShape
 import com.therxmv.ershu.utils.isValidLink
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Copy
@@ -49,7 +50,7 @@ fun LessonItem(
                 uriHandler.openLink(lessonLink)
             },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        shape = if (isNotLast) lessonShape else lastLessonShape
+        shape = if (isNotLast) lessonShape else lastLessonShape,
     ) {
         Row(
             modifier = Modifier
@@ -93,6 +94,14 @@ fun LessonItem(
                     )
                 }
             }
+        }
+
+
+        if (isNotLast) {
+            Divider(
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.surface,
+            )
         }
     }
 }

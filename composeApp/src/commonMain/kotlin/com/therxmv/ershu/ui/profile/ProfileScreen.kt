@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,26 +38,30 @@ class ProfileScreen : Screen, CallsScreen() {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<ProfileViewModel>()
-        val uiState by viewModel.uiState.collectAsState()
-        val callsDialogState = isDialogOpen.collectAsState().value
 
-        val isFacultyExpanded = uiState.dropdownExpandedMap[FACULTY] == true
-        val isYearExpanded = uiState.dropdownExpandedMap[YEAR] == true
-        val isSpecialtyExpanded = uiState.dropdownExpandedMap[SPECIALTY] == true
+        val uiState by viewModel.uiState.collectAsState()
+        val selectedState by viewModel.selectedState.collectAsState()
+        val expandedState by viewModel.expandedMap.collectAsState()
+        val callsDialogState by isDialogOpen.collectAsState()
+        val facultyButtonState by viewModel.facultyButtonState.collectAsState()
+        val callsScheduleState by viewModel.callsScheduleState.collectAsState()
+        val isOffline by viewModel.isOffline.collectAsState()
+
+        val isFacultyExpanded = expandedState[FACULTY] == true
+        val isYearExpanded = expandedState[YEAR] == true
+        val isSpecialtyExpanded = expandedState[SPECIALTY] == true
 
         val navigator = LocalNavigator.currentOrThrow
         val focusManager = LocalFocusManager.current
 
         if (callsDialogState) {
-            CallsDialog(
-                uiState.callsSchedule,
-            ) {
+            CallsDialog(callsScheduleState) {
                 toggleDialog()
             }
         }
 
         Column {
-            if (uiState.isOffline) {
+            if (isOffline) {
                 OfflineBanner()
             }
 
@@ -75,7 +78,7 @@ class ProfileScreen : Screen, CallsScreen() {
                             .fillMaxWidth()
                             .padding(top = 12.dp),
                         isExpanded = isFacultyExpanded,
-                        input = uiState.selectedFaculty?.facultyName.orEmpty(),
+                        input = selectedState.selectedFaculty?.facultyName.orEmpty(),
                         placeholder = Res.string.profile_choose_faculty,
                         onExpandedChange = {
                             viewModel.toggleDropdown(FACULTY, it)
@@ -84,27 +87,21 @@ class ProfileScreen : Screen, CallsScreen() {
                             viewModel.toggleDropdown(FACULTY)
                             focusManager.clearFocus()
                         },
-                    ) {
-                        uiState.facultiesList.forEach {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(text = it.facultyName)
-                                },
-                                onClick = {
-                                    viewModel.onEvent(
-                                        ProfileUiEvent.SelectFaculty(it)
-                                    )
-                                    viewModel.toggleDropdown(FACULTY)
-                                }
+                        itemList = uiState.facultiesList,
+                        itemTitle = { it.facultyName },
+                        onItemClick = {
+                            viewModel.onEvent(
+                                ProfileUiEvent.SelectFaculty(it)
                             )
-                        }
-                    }
+                            viewModel.toggleDropdown(FACULTY)
+                        },
+                    )
 
                     Button(
                         modifier = Modifier
                             .align(Alignment.End)
                             .padding(top = 12.dp),
-                        enabled = uiState.isFacultyButtonEnabled,
+                        enabled = facultyButtonState,
                         onClick = {
                             viewModel.onEvent(ProfileUiEvent.LoadSpecialties)
                         },
@@ -117,7 +114,7 @@ class ProfileScreen : Screen, CallsScreen() {
                             .fillMaxWidth()
                             .padding(top = 12.dp),
                         isExpanded = isYearExpanded,
-                        input = uiState.selectedYear.orEmpty(),
+                        input = selectedState.selectedYear.orEmpty(),
                         placeholder = Res.string.profile_choose_year,
                         onExpandedChange = {
                             viewModel.toggleDropdown(YEAR, it)
@@ -127,27 +124,21 @@ class ProfileScreen : Screen, CallsScreen() {
                             focusManager.clearFocus()
                         },
                         isEnabled = uiState.yearsList.isNotEmpty(),
-                    ) {
-                        uiState.getYears().forEach {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(text = it)
-                                },
-                                onClick = {
-                                    viewModel.onEvent(
-                                        ProfileUiEvent.SelectYear(it)
-                                    )
-                                    viewModel.toggleDropdown(YEAR)
-                                }
+                        itemList = uiState.getYears(),
+                        itemTitle = { it },
+                        onItemClick = {
+                            viewModel.onEvent(
+                                ProfileUiEvent.SelectYear(it)
                             )
+                            viewModel.toggleDropdown(YEAR)
                         }
-                    }
+                    )
                     DropDown(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp),
                         isExpanded = isSpecialtyExpanded,
-                        input = uiState.selectedSpecialty?.specialtyName.orEmpty(),
+                        input = selectedState.selectedSpecialty?.specialtyName.orEmpty(),
                         placeholder = Res.string.profile_choose_specialty,
                         onExpandedChange = {
                             viewModel.toggleDropdown(SPECIALTY, it)
@@ -156,24 +147,16 @@ class ProfileScreen : Screen, CallsScreen() {
                             viewModel.toggleDropdown(SPECIALTY)
                             focusManager.clearFocus()
                         },
-                        isEnabled = uiState.selectedYear != null
-                    ) {
-                        uiState.getSpecialties()?.forEach { item ->
-                            val text = item.specialtyName
-
-                            DropdownMenuItem(
-                                text = {
-                                    Text(text = text)
-                                },
-                                onClick = {
-                                    viewModel.onEvent(
-                                        ProfileUiEvent.SelectSpecialty(item)
-                                    )
-                                    viewModel.toggleDropdown(SPECIALTY)
-                                }
+                        isEnabled = selectedState.selectedYear != null,
+                        itemList = uiState.getSpecialties(selectedState.selectedYear),
+                        itemTitle = { it.specialtyName },
+                        onItemClick = {
+                            viewModel.onEvent(
+                                ProfileUiEvent.SelectSpecialty(it)
                             )
+                            viewModel.toggleDropdown(SPECIALTY)
                         }
-                    }
+                    )
 
                     Box(modifier = Modifier.fillMaxWidth().weight(1F))
 
@@ -185,15 +168,15 @@ class ProfileScreen : Screen, CallsScreen() {
 
                     Button(
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = uiState.isFieldsFilled(),
+                        enabled = uiState.isFieldsFilled(selectedState),
                         onClick = {
                             viewModel.onEvent(
                                 ProfileUiEvent.Continue {
                                     navigator.push(
                                         ScheduleScreen.createScreen(
-                                            uiState.selectedFaculty?.folderName,
-                                            uiState.selectedYear,
-                                            uiState.selectedSpecialty?.specialtyName,
+                                            selectedState.selectedFaculty?.folderName,
+                                            selectedState.selectedYear,
+                                            selectedState.selectedSpecialty?.specialtyName,
                                         )
                                     )
                                 }

@@ -2,9 +2,12 @@ package com.therxmv.ershu.ui.profile
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
 import com.therxmv.ershu.data.source.remote.isFailure
+import com.therxmv.ershu.ui.profile.utils.ProfileDropdown
+import com.therxmv.ershu.ui.profile.utils.ProfileSelectedFieldsState
 import com.therxmv.ershu.ui.profile.utils.ProfileUiEvent
 import com.therxmv.ershu.ui.profile.utils.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +23,27 @@ class ProfileViewModel(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _selectedState = MutableStateFlow(ProfileSelectedFieldsState())
+    val selectedState = _selectedState.asStateFlow()
+
+    private val _facultyButtonState = MutableStateFlow(true)
+    val facultyButtonState = _facultyButtonState.asStateFlow()
+
+    private val _isOffline = MutableStateFlow(false)
+    val isOffline = _isOffline.asStateFlow()
+
+    private val _expandedMap = MutableStateFlow(
+        mapOf(
+            ProfileDropdown.FACULTY to false,
+            ProfileDropdown.YEAR to false,
+            ProfileDropdown.SPECIALTY to false,
+        )
+    )
+    val expandedMap = _expandedMap.asStateFlow()
+
+    private val _callsScheduleState = MutableStateFlow<AllCallsScheduleModel?>(null)
+    val callsScheduleState = _callsScheduleState.asStateFlow()
+
     private val profile by lazy {
         profileLocalSourceApi.getProfileInfo()
     }
@@ -31,17 +55,19 @@ class ProfileViewModel(
     fun onEvent(event: ProfileUiEvent) {
         when (event) {
             is ProfileUiEvent.SelectFaculty -> {
-                _uiState.update {
+                _selectedState.update {
                     it.copy(
                         selectedFaculty = event.faculty,
-                        isFacultyButtonEnabled = true,
                     )
                 }
+
+                _facultyButtonState.update { true }
+
                 clearSpecialtySelection()
             }
 
             is ProfileUiEvent.SelectYear -> {
-                _uiState.update {
+                _selectedState.update {
                     it.copy(
                         selectedYear = event.year,
                         selectedSpecialty = null,
@@ -50,7 +76,7 @@ class ProfileViewModel(
             }
 
             is ProfileUiEvent.SelectSpecialty -> {
-                _uiState.update {
+                _selectedState.update {
                     it.copy(
                         selectedSpecialty = event.specialty,
                     )
@@ -58,7 +84,7 @@ class ProfileViewModel(
             }
 
             is ProfileUiEvent.Continue -> {
-                with(_uiState.value) {
+                with(_selectedState.value) {
                     profileLocalSourceApi.setProfileInfo(
                         selectedYear,
                         selectedFaculty?.folderName,
@@ -72,23 +98,16 @@ class ProfileViewModel(
                 screenModelScope.launch {
                     loadAllSpecialties()
                 }
-                _uiState.update {
-                    it.copy(
-                        isFacultyButtonEnabled = false,
-                    )
-                }
+
+                _facultyButtonState.update { false }
             }
 
             is ProfileUiEvent.ToggleDropdownState -> {
-                val map = _uiState.value.dropdownExpandedMap.toMutableMap()
+                val map = _expandedMap.value.toMutableMap()
 
                 map[event.dropdown] = event.value
 
-                _uiState.update {
-                    it.copy(
-                        dropdownExpandedMap = map,
-                    )
-                }
+                _expandedMap.update { map }
             }
         }
     }
@@ -97,8 +116,13 @@ class ProfileViewModel(
         _uiState.update {
             it.copy(
                 yearsList = emptyList(),
-                selectedYear = null,
                 specialtiesList = emptyList(),
+            )
+        }
+
+        _selectedState.update {
+            it.copy(
+                selectedYear = null,
                 selectedSpecialty = null,
             )
         }
@@ -114,22 +138,22 @@ class ProfileViewModel(
     private suspend fun loadCallsSchedule() {
         val callsSchedule = ershuApi.getCallSchedule().value
 
-        _uiState.update { state ->
-            state.copy(
-                callsSchedule = callsSchedule,
-            )
-        }
+        _callsScheduleState.update { callsSchedule }
     }
 
     private suspend fun loadAllFaculties() {
         val result = ershuApi.getAllFaculties()
         val allFaculties = result.value.allFaculties
 
-        _uiState.update { state ->
+        _uiState.update {
+            it.copy(facultiesList = allFaculties)
+        }
+
+        _isOffline.update { result.isFailure() }
+
+        _selectedState.update { state ->
             state.copy(
-                facultiesList = allFaculties,
                 selectedFaculty = allFaculties.find { it.folderName == profile?.faculty },
-                isOffline = result.isFailure(),
             )
         }
 
@@ -139,7 +163,7 @@ class ProfileViewModel(
     }
 
     private suspend fun loadAllSpecialties() {
-        val facultyPath = _uiState.value.selectedFaculty?.folderName.orEmpty()
+        val facultyPath = _selectedState.value.selectedFaculty?.folderName.orEmpty()
 
         val result = ershuApi.getAllSpecialties(facultyPath)
         val allSpecialties = result.value
@@ -150,10 +174,16 @@ class ProfileViewModel(
         _uiState.update { state ->
             state.copy(
                 yearsList = yearsList,
-                selectedYear = yearsList.find { it == profile?.year },
                 specialtiesList = allSpecialties.allYears,
+            )
+        }
+
+        _isOffline.update { result.isFailure() }
+
+        _selectedState.update { state ->
+            state.copy(
+                selectedYear = yearsList.find { it == profile?.year },
                 selectedSpecialty = allSpecialties.allYears.flatten().find { it.specialtyName == profile?.specialty },
-                isOffline = result.isFailure(),
             )
         }
     }

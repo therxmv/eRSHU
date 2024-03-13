@@ -1,8 +1,10 @@
 package com.therxmv.ershu.data.models
 
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Immutable
 @Serializable
 data class AllFacultiesModel(
     @SerialName("all_faculties") val allFaculties: List<FacultyModel> = emptyList(),
