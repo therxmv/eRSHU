@@ -18,7 +18,7 @@ import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState.Success
 import com.therxmv.ershu.ui.schedule.views.ScheduleList
 import com.therxmv.ershu.ui.views.OfflineBanner
-import com.therxmv.ershu.ui.views.ProgressIndicator
+import com.therxmv.ershu.ui.views.common.ProgressIndicator
 import com.therxmv.ershu.ui.views.ScreenTitleProvider
 import com.therxmv.ershu.ui.views.calls.CallsDialog
 import com.therxmv.ershu.ui.views.calls.CallsScreen
