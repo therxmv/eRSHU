@@ -37,6 +37,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.libres)
             implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenModel)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.core)
             implementation(libs.composeIcons.featherIcons)
@@ -83,8 +84,8 @@ android {
         targetSdk = 34
 
         applicationId = "com.therxmv.ershu.androidApp"
-        versionCode = 122
-        versionName = "1.2.2"
+        versionCode = 131
+        versionName = "1.3.1"
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")

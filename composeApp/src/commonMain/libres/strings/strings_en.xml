@@ -2,17 +2,26 @@
     <string name="app_name">eRSHU</string>
 
     <!--Profile-->
-    <string name="profile_specialty">About specialty</string>
-    <string name="profile_choose_faculty">Choose your faculty</string>
-    <string name="profile_choose_specialty">Choose your specialty</string>
-    <string name="profile_choose_year">Choose your year</string>
+    <string name="profile_title">Your profile</string>
+    <string name="profile_welcome">Welcome, RSHU student!</string>
+    <string name="profile_faculty_title">Faculty:</string>
+    <string name="profile_specialty_title">Specialty:</string>
+    <string name="profile_edit_button">Edit</string>
 
-    <string name="profile_specialty_prefix">Specialty:</string>
-    <string name="profile_year_prefix">Year:</string>
+    <!--SpecialtyInfo-->
+    <string name="specialtyinfo_title">About specialty</string>
+    <string name="specialtyinfo_edit">Edit profile</string>
+    <string name="specialtyinfo_change">Change schedule</string>
+    <string name="specialtyinfo_choose_faculty">Choose faculty</string>
+    <string name="specialtyinfo_choose_specialty">Choose specialty</string>
+    <string name="specialtyinfo_choose_year">Choose year</string>
 
-    <string name="profile_continue_label">ⓘ Fill all fields to continue</string>
-    <string name="profile_continue">Continue</string>
-    <string name="profile_select">Select</string>
+    <string name="specialtyinfo_specialty_prefix">Specialty:</string>
+    <string name="specialtyinfo_year_prefix">Year:</string>
+
+    <string name="specialtyinfo_continue_label">ⓘ Fill all fields to continue</string>
+    <string name="specialtyinfo_save">Save</string>
+    <string name="specialtyinfo_select">Select</string>
 
     <!--Schedule-->
     <string name="schedule_title">Schedule for</string>
@@ -46,5 +55,9 @@
     <string name="reminders_dialog_description">Please allow eRSHU send you notifications about upcoming lessons</string>
     <string name="reminders_dialog_grant">Allow</string>
     <string name="reminders_dialog_deny">Deny</string>
+
+    <!-- Home -->
+    <string name="home_schedule">Schedule</string>
+    <string name="home_profile">Profile</string>
 
 </resources>

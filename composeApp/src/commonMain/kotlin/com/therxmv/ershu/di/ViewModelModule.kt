@@ -4,8 +4,11 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.therxmv.ershu.ui.profile.ProfileViewModel
+import com.therxmv.ershu.ui.home.HomeViewModel
+import com.therxmv.ershu.ui.specialtyinfo.SpecialtyInfoViewModel
 import com.therxmv.ershu.ui.schedule.ScheduleViewModel
+import com.therxmv.ershu.ui.base.BaseViewModel
+import com.therxmv.ershu.ui.profile.ProfileViewModel
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.dsl.module
@@ -21,11 +24,23 @@ inline fun <reified T : ScreenModel> Screen.getScreenModel(
 }
 
 val viewModelModule = module {
-    factory {
-        ScheduleViewModel(get(), get(), get(), get())
+    single { // TODO maybe make single and implement refresh
+        ScheduleViewModel(get(), get(), get(), get(), get())
     }
 
     factory {
-        ProfileViewModel(get(), get())
+        SpecialtyInfoViewModel(get(), get())
+    }
+
+    factory {
+        HomeViewModel(get())
+    }
+
+    single {
+        BaseViewModel(get())
+    }
+
+    single {
+        ProfileViewModel(get())
     }
 }

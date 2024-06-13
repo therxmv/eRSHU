@@ -2,17 +2,26 @@
     <string name="app_name">єРДГУ</string>
 
     <!--Profile-->
-    <string name="profile_specialty">Про спеціальність</string>
-    <string name="profile_choose_faculty">Виберіть Ваш факультет</string>
-    <string name="profile_choose_specialty">Виберіть Вашу спеціальність</string>
-    <string name="profile_choose_year">Виберіть Ваш курс</string>
+    <string name="profile_title">Ваш профіль</string>
+    <string name="profile_welcome">Вітаємо, студенте РДГУ!</string>
+    <string name="profile_faculty_title">Факультет:</string>
+    <string name="profile_specialty_title">Спеціальність:</string>
+    <string name="profile_edit_button">Редагувати</string>
 
-    <string name="profile_specialty_prefix">Спеціальність:</string>
-    <string name="profile_year_prefix">Курс:</string>
+    <!--SpecialtyInfo-->
+    <string name="specialtyinfo_title">Про спеціальність</string>
+    <string name="specialtyinfo_edit">Редагування профілю</string>
+    <string name="specialtyinfo_change">Зміна розкладу</string>
+    <string name="specialtyinfo_choose_faculty">Виберіть факультет</string>
+    <string name="specialtyinfo_choose_specialty">Виберіть спеціальність</string>
+    <string name="specialtyinfo_choose_year">Виберіть курс</string>
 
-    <string name="profile_continue_label">ⓘ Заповніть всі поля щоб продовжити</string>
-    <string name="profile_continue">Продовжити</string>
-    <string name="profile_select">Вибрати</string>
+    <string name="specialtyinfo_specialty_prefix">Спеціальність:</string>
+    <string name="specialtyinfo_year_prefix">Курс:</string>
+
+    <string name="specialtyinfo_continue_label">ⓘ Заповніть всі поля щоб продовжити</string>
+    <string name="specialtyinfo_save">Зберегти</string>
+    <string name="specialtyinfo_select">Вибрати</string>
 
     <!--Schedule-->
     <string name="schedule_title">Розклад для</string>
@@ -46,5 +55,9 @@
     <string name="reminders_dialog_description">Будь ласка, дозвольте єРДГУ надсилати вам сповіщення про майбутні пари</string>
     <string name="reminders_dialog_grant">Дозволити</string>
     <string name="reminders_dialog_deny">Заборонити</string>
+
+    <!-- Home -->
+    <string name="home_schedule">Розклад</string>
+    <string name="home_profile">Профіль</string>
 
 </resources>

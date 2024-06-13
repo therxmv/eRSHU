@@ -17,13 +17,14 @@ class ProfileLocalSource(
         .getUserInfo(DEFAULT_NAME)
         .executeAsOneOrNull()
 
-    override fun setProfileInfo(year: String?, faculty: String?, specialty: String?) {
+    override fun setProfileInfo(year: String?, facultyPath: String?, facultyName: String?, specialtyName: String?) {
         clearUserInfo()
         database.profileQueries.setUserInfo(
             name = DEFAULT_NAME,
             year = year,
-            faculty = faculty,
-            specialty = specialty
+            facultyPath = facultyPath,
+            facultyName = facultyName,
+            specialtyName = specialtyName,
         )
     }
 

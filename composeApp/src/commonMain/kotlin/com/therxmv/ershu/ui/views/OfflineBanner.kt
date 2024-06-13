@@ -3,6 +3,7 @@ package com.therxmv.ershu.ui.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +20,7 @@ import com.therxmv.ershu.Res
 fun OfflineBanner() {
     Column(
         modifier = Modifier
+            .defaultMinSize(minHeight = 32.dp)
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally,

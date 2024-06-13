@@ -2,18 +2,21 @@ package com.therxmv.ershu.ui.schedule
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.reminders.RemindersApi
 import com.therxmv.ershu.data.reminders.event.EventProviderApi
 import com.therxmv.ershu.data.reminders.event.model.ReminderModel
+import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.local.reminders.RemindersLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
 import com.therxmv.ershu.data.source.remote.isFailure
+import com.therxmv.ershu.db.Profile
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState.Success
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState.Loading
+import com.therxmv.ershu.ui.base.BaseViewModel
+import com.therxmv.ershu.ui.base.ViewModelDisposer
 import com.therxmv.ershu.utils.toInt
 import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.delay
@@ -26,8 +29,9 @@ class ScheduleViewModel(
     private val ershuApi: ERSHUApi,
     private val remindersApi: RemindersApi,
     private val eventProviderApi: EventProviderApi,
-    private val remindersLocalSourceApi: RemindersLocalSourceApi
-) : ScreenModel {
+    private val remindersLocalSourceApi: RemindersLocalSourceApi,
+    private val profileLocalSourceApi: ProfileLocalSourceApi,
+) : ScreenModel, ViewModelDisposer {
 
     private val _uiState = MutableStateFlow<ScheduleUiState>(Loading)
     val uiState = _uiState.asStateFlow()
@@ -35,40 +39,40 @@ class ScheduleViewModel(
     private val _expandedList = MutableStateFlow(emptyList<Boolean>())
     val expandedList = _expandedList.asStateFlow()
 
-    private val _callsScheduleState = MutableStateFlow<AllCallsScheduleModel?>(null)
-    val callsScheduleState = _callsScheduleState.asStateFlow()
-
-    private val _isOffline = MutableStateFlow(false)
-    val isOffline = _isOffline.asStateFlow()
-
     private val _remindersState = MutableStateFlow<List<ReminderModel>>(emptyList())
     val remindersState = _remindersState.asStateFlow()
 
     private val _permissionDialogState = MutableStateFlow(false)
     val permissionDialogState = _permissionDialogState.asStateFlow()
 
-    fun loadData(facultyPath: String, year: String, specialty: String) {
+    override fun resetState() {
+        _uiState.update { Loading }
+    }
+
+    fun loadData(data: Profile?) {
+        val profile = data ?: profileLocalSourceApi.getProfileInfo()
+
         screenModelScope.launch {
-            val result = ershuApi.getSchedule(facultyPath, year, specialty)
+            delay(150)
+            val result = ershuApi.getSchedule(
+                profile?.facultyPath.orEmpty(),
+                profile?.year.orEmpty(),
+                profile?.specialtyName.orEmpty(),
+            )
             val schedule = result.value
 
-            loadCalls()
-
             _uiState.update { Success(schedule) }
-            _isOffline.update { result.isFailure() }
-            _expandedList.update {
-                delay(300)
-                schedule.week.getExpandedList()
+            BaseViewModel.setChildIsOffline(result.isFailure())
+
+            if (_expandedList.value.isEmpty()) {
+                _expandedList.update {
+                    delay(300)
+                    schedule.week.getExpandedList()
+                }
             }
 
             updateRemindersState()
         }
-    }
-
-    private suspend fun loadCalls() {
-        val callsSchedule = ershuApi.getLocalCallSchedule().value
-
-        _callsScheduleState.update { callsSchedule }
     }
 
     fun onEvent(event: ScheduleUiEvent) {
@@ -83,7 +87,8 @@ class ScheduleViewModel(
             is ScheduleUiEvent.SetNotification -> {
                 remindersApi.isPermissionGranted {
                     if (it) {
-                        setNotification(event.item, event.faculty)
+                        val profile = profileLocalSourceApi.getProfileInfo()
+                        setNotification(event.item, profile?.facultyPath.orEmpty())
                     } else {
                         _permissionDialogState.update { true }
                     }

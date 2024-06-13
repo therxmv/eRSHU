@@ -1,16 +1,17 @@
 CREATE TABLE Profile (
     name TEXT,
     year TEXT,
-    faculty TEXT,
-    specialty TEXT
+    facultyPath TEXT,
+    facultyName TEXT,
+    specialtyName TEXT
 );
 
 getUserInfo:
 SELECT Profile.* FROM Profile WHERE name = ?;
 
 setUserInfo:
-INSERT INTO Profile(name, year, faculty, specialty)
-VALUES(?, ?, ?, ?);
+INSERT INTO Profile(name, year, facultyPath, facultyName, specialtyName)
+VALUES(?, ?, ?, ?, ?);
 
 clearUserInfo:
 DELETE FROM Profile;

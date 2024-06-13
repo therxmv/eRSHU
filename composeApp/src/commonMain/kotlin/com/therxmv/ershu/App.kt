@@ -8,25 +8,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
+import com.therxmv.ershu.ui.home.HomeScreen
 import com.therxmv.ershu.ui.theme.AppTheme
-import com.therxmv.ershu.ui.profile.ProfileScreen
-import com.therxmv.ershu.ui.views.common.ERSHUAppBar
+import com.therxmv.ershu.ui.base.ERSHUAppBar
 import com.therxmv.ershu.ui.views.ScreenTitleProvider
-import com.therxmv.ershu.ui.views.calls.CallsScreen
+import com.therxmv.ershu.ui.base.BaseScreen
+import com.therxmv.ershu.ui.base.BaseViewModel
 
 @Composable
 internal fun App() = AppTheme {
 
-    Navigator(ProfileScreen()) {
+    Navigator(HomeScreen()) { navigator ->
         Scaffold(
             topBar = {
                 ERSHUAppBar(
-                    canPop = it.canPop,
-                    title = it.getAppBarTitle(),
+                    canPop = navigator.canPop,
+                    title = navigator.getAppBarTitle(),
                     onBackClick = {
-                        it.pop()
+                        navigator.pop()
                     },
-                    onBellClick = it.getBellClick(),
+                    onBellClick = navigator.getBellClick(),
                 )
             },
         ) { paddingValues ->
@@ -42,7 +43,7 @@ internal fun App() = AppTheme {
 }
 
 fun Navigator.getBellClick() = when(this.lastItem) {
-    is CallsScreen -> (this.lastItem as CallsScreen)::toggleDialog
+    is BaseScreen -> BaseViewModel::toggleDialog
     else -> null
 }
 

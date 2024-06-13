@@ -1,5 +1,5 @@
 package com.therxmv.ershu.ui.views
 
 interface ScreenTitleProvider {
-    fun getTitle(): String
+    fun getTitle(): String // TODO change implementation
 }
