@@ -15,31 +15,11 @@ class ERSHUDatabase(
 ) : ERSHUDatabaseApi {
 
     companion object {
-        private const val DEFAULT_NAME = "user_name"
-
         private const val FIRST_SHIFT = "first"
         private const val SECOND_SHIFT = "second"
     }
 
     private val database = ERSHUDatabase(databaseDriverFactory.createDriver())
-
-    override fun getProfileInfo() = database.profileQueries
-        .getUserInfo(DEFAULT_NAME)
-        .executeAsOneOrNull()
-
-    override fun setProfileInfo(year: String?, faculty: String?, specialty: String?) {
-        clearUserInfo()
-        database.profileQueries.setUserInfo(
-            name = DEFAULT_NAME,
-            year = year,
-            faculty = faculty,
-            specialty = specialty
-        )
-    }
-
-    override fun clearUserInfo() {
-        database.profileQueries.clearUserInfo()
-    }
 
     override fun getAllSpecialties(faculty: String?) = AllSpecialtiesModel(
         database.specialtyQueries
@@ -78,10 +58,24 @@ class ERSHUDatabase(
         clearSchedule(specialty)
         scheduleModel.week.forEachIndexed { index, list ->
             if (list.isEmpty()) {
-                database.lessonQueries.setSchedule(null, null, null, "${index + 1}", specialty)
+                database.lessonQueries.setSchedule(
+                    name = null,
+                    number = null,
+                    link = null,
+                    dayOfWeek = "${index + 1}",
+                    specialty = specialty,
+                    lessonId = null,
+                )
             } else {
                 list.forEach { item ->
-                    database.lessonQueries.setSchedule(item.lessonName, item.lessonNumber, item.link, "${index + 1}", specialty)
+                    database.lessonQueries.setSchedule(
+                        name = item.lessonName,
+                        number = item.lessonNumber,
+                        link = item.link,
+                        dayOfWeek = "${index + 1}",
+                        specialty = specialty,
+                        lessonId = item.lessonId,
+                    )
                 }
             }
         }

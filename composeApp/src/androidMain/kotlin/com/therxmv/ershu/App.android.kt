@@ -1,6 +1,8 @@
 package com.therxmv.ershu
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,10 +32,27 @@ class AndroidApp : Application() {
 }
 
 class AppActivity : ComponentActivity() {
+
+    companion object {
+        var ACTIVITY: AppActivity? = null
+
+        fun createIntent(context: Context) = Intent(context, AppActivity::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             App()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ACTIVITY = this
+    }
+
+    override fun onPause() {
+        super.onPause()
+        ACTIVITY = null
     }
 }

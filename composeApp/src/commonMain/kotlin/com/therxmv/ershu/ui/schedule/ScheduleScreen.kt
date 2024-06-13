@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,6 +15,7 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.screen.Screen
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.di.getScreenModel
+import com.therxmv.ershu.ui.views.reminders.RemindersPermissionDialog
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiState.Success
 import com.therxmv.ershu.ui.schedule.views.ScheduleList
@@ -46,6 +48,8 @@ class ScheduleScreen(
         val expandedState by viewModel.expandedList.collectAsState()
         val callsScheduleState by viewModel.callsScheduleState.collectAsState()
         val isOffline by viewModel.isOffline.collectAsState()
+        val remindersState by viewModel.remindersState.collectAsState()
+        val permissionDialogState by viewModel.permissionDialogState.collectAsState()
 
         LaunchedEffect(Unit) {
             viewModel.loadData(facultyPath, year, specialty)
@@ -55,6 +59,17 @@ class ScheduleScreen(
             CallsDialog(callsScheduleState) {
                 toggleDialog()
             }
+        }
+
+        if (permissionDialogState) {
+            RemindersPermissionDialog(
+                onClick = {
+                    viewModel.onEvent(ScheduleUiEvent.PermissionDialogAction())
+                },
+                onDismiss = {
+                    viewModel.onEvent(ScheduleUiEvent.PermissionDialogAction(true))
+                },
+            )
         }
 
         AnimatedContent(
@@ -70,16 +85,20 @@ class ScheduleScreen(
         ) { state ->
             when (state) {
                 is Success -> {
-                    if (isOffline) {
-                        OfflineBanner()
-                    }
+                    Column {
+                        if (isOffline) {
+                            OfflineBanner()
+                        }
 
-                    ScheduleList(
-                        schedule = (uiState as Success).schedule.week,
-                        dayName = { viewModel.getDayOfWeek(it) },
-                        onDayClick = { viewModel.onEvent(ScheduleUiEvent.ExpandDay(it)) },
-                        isExpanded = { expandedState.getOrNull(it) == true }
-                    )
+                        ScheduleList(
+                            schedule = (uiState as Success).schedule.week,
+                            reminders = remindersState,
+                            onDayClick = { viewModel.onEvent(ScheduleUiEvent.ExpandDay(it)) },
+                            isExpanded = { expandedState.getOrNull(it) == true },
+                            setNotification = { viewModel.onEvent(ScheduleUiEvent.SetNotification(it, facultyPath)) },
+                            deleteNotification = { viewModel.onEvent(ScheduleUiEvent.DeleteNotification(it)) },
+                        )
+                    }
                 }
 
                 else -> ProgressIndicator()

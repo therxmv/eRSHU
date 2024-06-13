@@ -1,8 +1,7 @@
-package com.therxmv.ershu.theme
+package com.therxmv.ershu.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -114,15 +113,14 @@ internal fun AppTheme(
         LocalThemeIsDark provides isDarkState
     ) {
         val isDark by isDarkState
-        val dynamicColor = getDynamicColorSchemes()
 
         val colorScheme = if (isDark) {
-            dynamicColor.second ?: DarkColorScheme
+            DarkColorScheme
         } else {
-            dynamicColor.first ?: LightColorScheme
+            LightColorScheme
         }
 
-        SystemAppearance(!isDark)
+        SystemAppearance(isDark.not())
 
         MaterialTheme(
             colorScheme = colorScheme,
@@ -137,6 +135,3 @@ internal fun AppTheme(
 
 @Composable
 internal expect fun SystemAppearance(isDark: Boolean)
-
-@Composable
-internal expect fun getDynamicColorSchemes(): Pair<ColorScheme?, ColorScheme?>

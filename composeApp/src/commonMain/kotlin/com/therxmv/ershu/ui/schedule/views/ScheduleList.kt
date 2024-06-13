@@ -15,14 +15,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.LessonModel
+import com.therxmv.ershu.data.reminders.event.model.ReminderModel
 import com.therxmv.ershu.ui.schedule.utils.mapWithGroups
+import com.therxmv.ershu.utils.toDayOfWeek
 
 @Composable
 fun ScheduleList(
     schedule: List<List<LessonModel>>,
+    reminders: List<ReminderModel>,
     isExpanded: (Int) -> Boolean,
-    dayName: (Int) -> String,
     onDayClick: (Int) -> Unit,
+    setNotification: (LessonModel) -> Unit,
+    deleteNotification: (ReminderModel) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -44,12 +48,15 @@ fun ScheduleList(
             LazyColumn {
                 schedule.forEachIndexed { index, lessonModels ->
                     dayItem(
-                        dayName = dayName(index + 1),
+                        dayName = index.toDayOfWeek(),
                         scheduleList = lessonModels.mapWithGroups(),
+                        reminders = reminders,
                         isExpanded = isExpanded(index),
                         onDayClick = {
                             onDayClick(index)
                         },
+                        setNotification = setNotification,
+                        deleteNotification = deleteNotification,
                     )
                 }
                 item {

@@ -2,9 +2,12 @@ package com.therxmv.ershu.ui.schedule.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -15,29 +18,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.LessonModel
-import com.therxmv.ershu.theme.ERSHUShapes.lastLessonShape
-import com.therxmv.ershu.theme.ERSHUShapes.lessonShape
+import com.therxmv.ershu.data.reminders.event.model.ReminderModel
+import com.therxmv.ershu.ui.theme.ERSHUShapes.lessonShape
+import com.therxmv.ershu.ui.theme.ERSHUShapes.lastLessonShape
+import com.therxmv.ershu.ui.views.CopyIconButton
 import com.therxmv.ershu.utils.isValidLink
 import compose.icons.FeatherIcons
-import compose.icons.feathericons.Copy
+import compose.icons.feathericons.Bell
+import compose.icons.feathericons.BellOff
 
 @Composable
 fun LessonItem(
     item: LessonModel,
     isNotLast: Boolean,
+    reminder: ReminderModel?,
+    setNotification: (LessonModel) -> Unit,
+    deleteNotification: (ReminderModel) -> Unit,
 ) {
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val uriHandler = LocalUriHandler.current
     val lessonLink = item.link.orEmpty()
 
@@ -54,21 +58,23 @@ fun LessonItem(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
+                .fillMaxSize()
+                .padding(
+                    horizontal = 8.dp,
+                    vertical = 12.dp,
+                ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             item.lessonNumber?.takeIf { it.isNotEmpty() }?.let {
                 Text(
-                    modifier = Modifier.padding(end = 12.dp),
                     text = it,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Black,
                     color = MaterialTheme.colorScheme.secondary,
                 )
+                Spacer(Modifier.width(10.dp))
             }
             Text(
-                modifier = Modifier.weight(0.5F),
+                modifier = Modifier.weight(1F),
                 text = item.lessonName ?: Res.string.schedule_no_lesson,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 5,
@@ -76,26 +82,36 @@ fun LessonItem(
 
             if (lessonLink.isNotEmpty()) {
                 if (isValidLink(lessonLink)) {
-                    IconButton(
-                        onClick = {
-                            clipboardManager.setText(AnnotatedString(lessonLink))
-                        },
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(20.dp),
-                            imageVector = FeatherIcons.Copy,
-                            contentDescription = "Copy",
-                        )
-                    }
+                    CopyIconButton(lessonLink)
                 } else {
                     Text(
                         text = lessonLink,
                         style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Black,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
+                }
+            }
+
+            if (item.lessonName != null) {
+                IconButton(
+                    onClick = {
+                        if (reminder == null) {
+                            setNotification(item)
+                        } else {
+                            deleteNotification(reminder)
+                        }
+                    },
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        imageVector = reminder.getIcon(),
+                        contentDescription = "Notification",
+                        tint = reminder.getIconTint(),
                     )
                 }
             }
         }
-
 
         if (isNotLast) {
             Divider(
@@ -104,6 +120,19 @@ fun LessonItem(
             )
         }
     }
+}
+
+@Composable
+private fun ReminderModel?.getIconTint() = if (this == null) {
+    MaterialTheme.colorScheme.onSurfaceVariant
+} else {
+    MaterialTheme.colorScheme.primary
+}
+
+private fun ReminderModel?.getIcon() = if (this == null) {
+    FeatherIcons.BellOff
+} else {
+    FeatherIcons.Bell
 }
 
 private fun UriHandler.openLink(link: String) {

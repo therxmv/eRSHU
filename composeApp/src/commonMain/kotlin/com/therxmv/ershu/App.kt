@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
-import com.therxmv.ershu.theme.AppTheme
+import com.therxmv.ershu.ui.theme.AppTheme
 import com.therxmv.ershu.ui.profile.ProfileScreen
-import com.therxmv.ershu.ui.views.ERSHUAppBar
+import com.therxmv.ershu.ui.views.common.ERSHUAppBar
 import com.therxmv.ershu.ui.views.ScreenTitleProvider
 import com.therxmv.ershu.ui.views.calls.CallsScreen
 

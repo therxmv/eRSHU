@@ -4,6 +4,7 @@ import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
+import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.models.ScheduleModel
 import com.therxmv.ershu.data.source.local.database.ERSHUDatabaseApi
 import io.ktor.client.HttpClient
@@ -55,7 +56,7 @@ class ERSHUService(
                 .get("$apiUrl/$facultyPath/${year}/${specialty}.json")
                 .body<ScheduleModel>()
                 .apply {
-                    week = week.map { it.distinct() }
+                    week = week.mapSchedule()
                 }
                 .also {
                     ershuDatabaseApi.setSchedule(it, specialty)
@@ -90,4 +91,14 @@ class ERSHUService(
     override suspend fun getLocalCallSchedule() = Result.Failure(
         ershuDatabaseApi.getAllCalls() ?: AllCallsScheduleModel()
     )
+
+    private fun List<List<LessonModel>>.mapSchedule() = this.mapIndexed { day, list ->
+        list.distinct().mapIndexed { index, item ->
+            val number = item.lessonNumber ?: (index + 1)
+
+            item.copy(
+                lessonId = "$day-$number-${item.lessonName}"
+            )
+        }
+    }
 }

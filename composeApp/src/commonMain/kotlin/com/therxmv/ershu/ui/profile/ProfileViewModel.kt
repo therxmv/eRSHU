@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val ershuApi: ERSHUApi,
-    private val profileLocalSourceApi: ProfileLocalSourceApi,
+    private val profileLocalSourceApi: ProfileLocalSourceApi
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(ProfileUiState())

@@ -3,15 +3,16 @@ CREATE TABLE Lesson (
     number TEXT,
     link TEXT,
     dayOfWeek TEXT,
-    specialty TEXT
+    specialty TEXT,
+    lessonId TEXT
 );
 
 getAllSchedule:
 SELECT Lesson.* FROM Lesson WHERE specialty = ?;
 
 setSchedule:
-INSERT INTO Lesson(name, number, link, dayOfWeek, specialty)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO Lesson(name, number, link, dayOfWeek, specialty, lessonId)
+VALUES (?, ?, ?, ?, ?, ?);
 
 clearSchedule:
 DELETE FROM Lesson WHERE specialty = ?;

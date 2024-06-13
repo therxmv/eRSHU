@@ -1,0 +1,16 @@
+CREATE TABLE Reminder (
+    reminderId TEXT,
+    lessonId TEXT,
+    startDate TEXT
+);
+
+DROP TABLE Lesson;
+
+CREATE TABLE Lesson (
+    name TEXT,
+    number TEXT,
+    link TEXT,
+    dayOfWeek TEXT,
+    specialty TEXT,
+    lessonId TEXT
+);

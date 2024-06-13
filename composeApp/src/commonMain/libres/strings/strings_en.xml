@@ -2,14 +2,13 @@
     <string name="app_name">eRSHU</string>
 
     <!--Profile-->
-    <string name="profile_about">About me</string>
-    <string name="profile_enter_first_name">Enter your first name</string>
-    <string name="profile_enter_second_name">Enter your second name</string>
-
     <string name="profile_specialty">About specialty</string>
     <string name="profile_choose_faculty">Choose your faculty</string>
     <string name="profile_choose_specialty">Choose your specialty</string>
     <string name="profile_choose_year">Choose your year</string>
+
+    <string name="profile_specialty_prefix">Specialty:</string>
+    <string name="profile_year_prefix">Year:</string>
 
     <string name="profile_continue_label">ⓘ Fill all fields to continue</string>
     <string name="profile_continue">Continue</string>
@@ -40,5 +39,12 @@
     <string name="calls_schedule_second_shift">Second shift</string>
     <string name="calls_schedule_copy">Copy</string>
     <string name="calls_schedule_close">Close</string>
+
+    <!-- Reminders -->
+    <string name="reminder_title">Починається пара!</string>
+    <string name="reminders_dialog_title">Reminders permission</string>
+    <string name="reminders_dialog_description">Please allow eRSHU send you notifications about upcoming lessons</string>
+    <string name="reminders_dialog_grant">Allow</string>
+    <string name="reminders_dialog_deny">Deny</string>
 
 </resources>

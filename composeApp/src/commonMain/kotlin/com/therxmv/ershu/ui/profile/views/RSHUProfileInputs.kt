@@ -1,6 +1,7 @@
 package com.therxmv.ershu.ui.profile.views
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
@@ -30,6 +31,7 @@ fun <T> RSHUDropDown(
     itemTitle: (T) -> String,
     onItemClick: (T) -> Unit,
     isEnabled: Boolean = true,
+    prefix: String? = null,
 ) {
     val radius = (if (isExpanded) 0 else 8).dp
     val bottomRadius = animateDpAsState(targetValue = radius)
@@ -41,6 +43,14 @@ fun <T> RSHUDropDown(
         TextField(
             modifier = modifier.menuAnchor(),
             value = input,
+            prefix = {
+                if (prefix != null && input.isNotEmpty()) {
+                    Text(
+                        modifier = Modifier.padding(end = 8.dp),
+                        text = prefix,
+                    )
+                }
+            },
             onValueChange = {},
             readOnly = true,
             trailingIcon = {

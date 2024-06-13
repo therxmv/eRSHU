@@ -7,6 +7,9 @@
     <string name="profile_choose_specialty">Виберіть Вашу спеціальність</string>
     <string name="profile_choose_year">Виберіть Ваш курс</string>
 
+    <string name="profile_specialty_prefix">Спеціальність:</string>
+    <string name="profile_year_prefix">Курс:</string>
+
     <string name="profile_continue_label">ⓘ Заповніть всі поля щоб продовжити</string>
     <string name="profile_continue">Продовжити</string>
     <string name="profile_select">Вибрати</string>
@@ -36,5 +39,12 @@
     <string name="calls_schedule_second_shift">Друга зміна</string>
     <string name="calls_schedule_copy">Копіювати</string>
     <string name="calls_schedule_close">Закрити</string>
+
+    <!-- Reminders -->
+    <string name="reminder_title">Починається пара!</string>
+    <string name="reminders_dialog_title">Дозвіл на нагадування</string>
+    <string name="reminders_dialog_description">Будь ласка, дозвольте єРДГУ надсилати вам сповіщення про майбутні пари</string>
+    <string name="reminders_dialog_grant">Дозволити</string>
+    <string name="reminders_dialog_deny">Заборонити</string>
 
 </resources>

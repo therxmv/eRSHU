@@ -2,9 +2,12 @@ package com.therxmv.ershu.ui.schedule
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.LessonModel
+import com.therxmv.ershu.data.reminders.RemindersApi
+import com.therxmv.ershu.data.reminders.event.EventProviderApi
+import com.therxmv.ershu.data.reminders.event.model.ReminderModel
+import com.therxmv.ershu.data.source.local.reminders.RemindersLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
 import com.therxmv.ershu.data.source.remote.isFailure
 import com.therxmv.ershu.ui.schedule.utils.ScheduleUiEvent
@@ -21,6 +24,9 @@ import kotlinx.coroutines.launch
 
 class ScheduleViewModel(
     private val ershuApi: ERSHUApi,
+    private val remindersApi: RemindersApi,
+    private val eventProviderApi: EventProviderApi,
+    private val remindersLocalSourceApi: RemindersLocalSourceApi
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow<ScheduleUiState>(Loading)
@@ -35,16 +41,11 @@ class ScheduleViewModel(
     private val _isOffline = MutableStateFlow(false)
     val isOffline = _isOffline.asStateFlow()
 
-    fun getDayOfWeek(index: Int) = when (index) {
-        1 -> Res.string.schedule_monday
-        2 -> Res.string.schedule_tuesday
-        3 -> Res.string.schedule_wednesday
-        4 -> Res.string.schedule_thursday
-        5 -> Res.string.schedule_friday
-        6 -> Res.string.schedule_saturday
-        7 -> Res.string.schedule_sunday
-        else -> Res.string.schedule_unknown_day
-    }
+    private val _remindersState = MutableStateFlow<List<ReminderModel>>(emptyList())
+    val remindersState = _remindersState.asStateFlow()
+
+    private val _permissionDialogState = MutableStateFlow(false)
+    val permissionDialogState = _permissionDialogState.asStateFlow()
 
     fun loadData(facultyPath: String, year: String, specialty: String) {
         screenModelScope.launch {
@@ -56,9 +57,11 @@ class ScheduleViewModel(
             _uiState.update { Success(schedule) }
             _isOffline.update { result.isFailure() }
             _expandedList.update {
-                delay(350)
+                delay(300)
                 schedule.week.getExpandedList()
             }
+
+            updateRemindersState()
         }
     }
 
@@ -76,6 +79,47 @@ class ScheduleViewModel(
 
                 _expandedList.update { newList }
             }
+
+            is ScheduleUiEvent.SetNotification -> {
+                remindersApi.isPermissionGranted {
+                    if (it) {
+                        setNotification(event.item, event.faculty)
+                    } else {
+                        _permissionDialogState.update { true }
+                    }
+                }
+            }
+
+            is ScheduleUiEvent.DeleteNotification -> {
+                remindersApi.deleteNotification(event.reminder)
+                remindersLocalSourceApi.deleteReminder(event.reminder.reminderId)
+                updateRemindersState()
+            }
+
+            is ScheduleUiEvent.PermissionDialogAction -> {
+                if (event.isDeny) {
+                    _permissionDialogState.update { false }
+                } else {
+                    remindersApi.requestNotificationPermission()
+                }
+            }
+        }
+    }
+
+    private fun setNotification(item: LessonModel, faculty: String) {
+        val event = eventProviderApi.getEvent(item, faculty)
+
+        if (remindersLocalSourceApi.isReminderExists(event).not()) {
+            remindersApi.addNotification(event) {
+                remindersLocalSourceApi.setReminder(event)
+                updateRemindersState()
+            }
+        }
+    }
+
+    private fun updateRemindersState() {
+        _remindersState.update {
+            remindersLocalSourceApi.getAllReminders().toMutableList()
         }
     }
 

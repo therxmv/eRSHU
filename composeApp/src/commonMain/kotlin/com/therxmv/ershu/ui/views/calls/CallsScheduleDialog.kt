@@ -2,7 +2,10 @@ package com.therxmv.ershu.ui.views.calls
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
@@ -37,10 +40,11 @@ fun CallsDialog(
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
-                    modifier = Modifier.padding(bottom = 16.dp),
                     text = Res.string.calls_schedule_title,
                     style = MaterialTheme.typography.headlineSmall,
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 callsModel?.let {
                     LazyColumn {
@@ -70,17 +74,19 @@ fun CallsDialog(
                     }
                 }
 
+                Spacer(modifier = Modifier.height(24.dp))
+
                 Row(
                     modifier = Modifier
-                        .padding(top = 24.dp)
                         .align(Alignment.End),
                 ) {
                     TextButton(
-                        modifier = Modifier.padding(end = 8.dp),
                         onClick = onDismiss,
                     ) {
                         Text(Res.string.calls_schedule_close)
                     }
+
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     TextButton(
                         onClick = {

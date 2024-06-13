@@ -22,7 +22,7 @@ inline fun <reified T : ScreenModel> Screen.getScreenModel(
 
 val viewModelModule = module {
     factory {
-        ScheduleViewModel(get())
+        ScheduleViewModel(get(), get(), get(), get())
     }
 
     factory {

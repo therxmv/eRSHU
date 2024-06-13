@@ -27,6 +27,9 @@ object RSHUColors {
             unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
             focusedTextColor = MaterialTheme.colorScheme.onPrimary,
 
+            unfocusedPrefixColor = MaterialTheme.colorScheme.onPrimary,
+            focusedPrefixColor = MaterialTheme.colorScheme.onPrimary,
+
             unfocusedPlaceholderColor = MaterialTheme.colorScheme.surfaceVariant,
             focusedPlaceholderColor = MaterialTheme.colorScheme.surfaceVariant,
         )

@@ -6,6 +6,11 @@ import com.therxmv.ershu.data.source.local.database.ERSHUDatabaseApi
 import com.therxmv.ershu.data.source.local.profile.ProfileLocalSource
 import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
+import com.therxmv.ershu.data.reminders.RemindersApi
+import com.therxmv.ershu.data.reminders.event.EventProvider
+import com.therxmv.ershu.data.reminders.event.EventProviderApi
+import com.therxmv.ershu.data.source.local.reminders.RemindersLocalSource
+import com.therxmv.ershu.data.source.local.reminders.RemindersLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUService
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
@@ -21,6 +26,10 @@ val dataModule = module {
 
     single<ProfileLocalSourceApi> {
         ProfileLocalSource(get())
+    }
+
+    single<RemindersLocalSourceApi> {
+        RemindersLocalSource(get())
     }
 
     single<ERSHUDatabaseApi> {
@@ -41,5 +50,13 @@ val dataModule = module {
 
     single {
         DatabaseDriverFactory()
+    }
+
+    single {
+        RemindersApi()
+    }
+
+    single<EventProviderApi> {
+        EventProvider()
     }
 }

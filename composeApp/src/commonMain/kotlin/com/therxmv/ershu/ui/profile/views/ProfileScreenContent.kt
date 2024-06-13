@@ -39,7 +39,7 @@ fun ProfileScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 24.dp, end = 24.dp, bottom = 12.dp)
+            .padding(horizontal = 24.dp, vertical = 12.dp)
     ) {
         Text(
             text = Res.string.profile_specialty,
@@ -104,7 +104,8 @@ fun ProfileScreenContent(
                     ProfileUiEvent.SelectYear(it),
                     YEAR,
                 )
-            }
+            },
+            prefix = Res.string.profile_year_prefix,
         )
         RSHUDropDown(
             modifier = Modifier
@@ -127,7 +128,8 @@ fun ProfileScreenContent(
                     ProfileUiEvent.SelectSpecialty(it),
                     SPECIALTY,
                 )
-            }
+            },
+            prefix = Res.string.profile_specialty_prefix,
         )
 
         Box(modifier = Modifier.fillMaxWidth().weight(1F))

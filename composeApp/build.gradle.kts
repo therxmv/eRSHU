@@ -45,6 +45,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.sqlDelight.coroutines.extensions)
+            implementation(libs.kotlinx.datetime)
         }
 
         commonTest.dependencies {
@@ -82,8 +83,8 @@ android {
         targetSdk = 34
 
         applicationId = "com.therxmv.ershu.androidApp"
-        versionCode = 115
-        versionName = "1.1.5"
+        versionCode = 122
+        versionName = "1.2.2"
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")

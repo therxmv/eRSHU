@@ -1,4 +1,4 @@
-package com.therxmv.ershu.theme
+package com.therxmv.ershu.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape

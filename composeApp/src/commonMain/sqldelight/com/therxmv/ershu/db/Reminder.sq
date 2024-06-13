@@ -1,0 +1,15 @@
+CREATE TABLE Reminder (
+    reminderId TEXT,
+    lessonId TEXT,
+    startDate TEXT
+);
+
+getAllReminders:
+SELECT Reminder.* FROM Reminder;
+
+setReminder:
+INSERT INTO Reminder(reminderId, lessonId, startDate)
+VALUES (?, ?, ?);
+
+deleteReminder:
+DELETE FROM Reminder WHERE reminderId = ?;
