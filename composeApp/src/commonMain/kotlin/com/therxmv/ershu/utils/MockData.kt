@@ -6,6 +6,8 @@ import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
 import com.therxmv.ershu.data.models.FacultyModel
 import com.therxmv.ershu.data.models.LessonModel
+import com.therxmv.ershu.data.models.RatingItem
+import com.therxmv.ershu.data.models.RatingModel
 import com.therxmv.ershu.data.models.ScheduleModel
 import com.therxmv.ershu.data.models.SpecialtyModel
 
@@ -66,6 +68,27 @@ object MockData {
                 LessonModel(lessonName = "Адміністрування баз даних проф. Викладач Ю.В.", lessonNumber = "5", link = "https://meet.google.com/xyc-chmy-yhh")
             ),
             listOf()
+        )
+    )
+
+    val ratingModel = RatingModel(
+        list = listOf(
+            RatingItem(
+                name = "Філософія",
+                credits = 3,
+            ),
+            RatingItem(
+                name = "Аналіз даних",
+                credits = 4,
+            ),
+            RatingItem(
+                name = "Моделювання та проєктування програмного забезпечення",
+                credits = 5,
+            ),
+            RatingItem(
+                name = "Інтерфейси користувача та системні інтерфейси",
+                credits = 4,
+            ),
         )
     )
 }

@@ -4,11 +4,12 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.therxmv.ershu.ui.home.HomeViewModel
-import com.therxmv.ershu.ui.specialtyinfo.SpecialtyInfoViewModel
-import com.therxmv.ershu.ui.schedule.ScheduleViewModel
 import com.therxmv.ershu.ui.base.BaseViewModel
-import com.therxmv.ershu.ui.profile.ProfileViewModel
+import com.therxmv.ershu.ui.home.viewmodel.HomeViewModel
+import com.therxmv.ershu.ui.profile.viewmodel.ProfileViewModel
+import com.therxmv.ershu.ui.rating.viewmodel.RatingViewModel
+import com.therxmv.ershu.ui.schedule.viewmodel.ScheduleViewModel
+import com.therxmv.ershu.ui.specialtyinfo.viewmodel.SpecialtyInfoViewModel
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.dsl.module
@@ -25,22 +26,26 @@ inline fun <reified T : ScreenModel> Screen.getScreenModel(
 
 val viewModelModule = module {
     single { // TODO maybe make single and implement refresh
-        ScheduleViewModel(get(), get(), get(), get(), get())
+        ScheduleViewModel(get(), get(), get(), get(), get(), get())
     }
 
     factory {
-        SpecialtyInfoViewModel(get(), get())
+        SpecialtyInfoViewModel(get(), get(), get())
     }
 
     factory {
-        HomeViewModel(get())
+        HomeViewModel(get(), get())
     }
 
     single {
-        BaseViewModel(get())
+        BaseViewModel(get(), get())
     }
 
     single {
         ProfileViewModel(get())
+    }
+
+    single {
+        RatingViewModel(get(), get())
     }
 }

@@ -2,10 +2,12 @@ package com.therxmv.ershu.data.source.local.mapper
 
 import com.therxmv.ershu.data.models.FacultyModel
 import com.therxmv.ershu.data.models.LessonModel
+import com.therxmv.ershu.data.models.RatingItem
 import com.therxmv.ershu.data.models.SpecialtyModel
 import com.therxmv.ershu.data.reminders.event.model.ReminderModel
 import com.therxmv.ershu.db.Faculty
 import com.therxmv.ershu.db.Lesson
+import com.therxmv.ershu.db.Rating
 import com.therxmv.ershu.db.Reminder
 import com.therxmv.ershu.db.Specialty
 
@@ -24,4 +26,9 @@ fun Reminder.toDomain() = ReminderModel(
     startDate = this.startDate?.toLongOrNull() ?: 0L,
     reminderId = this.reminderId.orEmpty(),
     lessonId = this.lessonId.orEmpty(),
+)
+
+fun Rating.toDomain() = RatingItem(
+    name = this.name.orEmpty(),
+    credits = this.credits?.toInt() ?: 0,
 )

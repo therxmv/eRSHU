@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.therxmv.ershu.di.getScreenModel
-import com.therxmv.ershu.ui.views.OfflineBanner
-import com.therxmv.ershu.ui.views.calls.CallsDialog
 import com.therxmv.ershu.ui.base.BaseViewModel.Companion.toggleDialog
+import com.therxmv.ershu.ui.base.views.OfflineBanner
+import com.therxmv.ershu.ui.base.views.calls.CallsDialog
 
 abstract class BaseScreen : Screen {
 
@@ -23,9 +23,11 @@ abstract class BaseScreen : Screen {
         val isOffline by viewModel.isOffline.collectAsState()
 
         if (callsState.isDialogVisible) {
-            CallsDialog(callsState.callsModel) {
-                toggleDialog()
-            }
+            CallsDialog(
+                callsModel = callsState.callsModel,
+                onDismiss = { toggleDialog() },
+                onCopy = viewModel::copyCallsAnalytics
+            )
         }
 
         if (isOffline) {

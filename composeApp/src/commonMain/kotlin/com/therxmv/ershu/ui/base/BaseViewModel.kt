@@ -1,15 +1,19 @@
 package com.therxmv.ershu.ui.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
+import com.therxmv.ershu.analytics.AnalyticsApi
 import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.source.remote.ERSHUApi
 import com.therxmv.ershu.data.source.remote.isFailure
+import com.therxmv.ershu.utils.Analytics.CALLS_CLICK
+import com.therxmv.ershu.utils.Analytics.CALLS_COPY_CLICK
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class BaseViewModel(
     private val ershuApi: ERSHUApi,
+    private val analyticsApi: AnalyticsApi,
 ) : ScreenModel {
 
     val callsState = _callsState.asStateFlow()
@@ -34,6 +38,7 @@ class BaseViewModel(
 
     suspend fun loadCalls() {
         if (_callsState.value.callsModel == null) {
+            analyticsApi.onClickEvent(CALLS_CLICK)
             val callsSchedule = ershuApi.getCallSchedule()
 
             _callsState.update {
@@ -44,6 +49,10 @@ class BaseViewModel(
 
             _isOffline.update { callsSchedule.isFailure() }
         }
+    }
+
+    fun copyCallsAnalytics() {
+        analyticsApi.onClickEvent(CALLS_COPY_CLICK)
     }
 
     data class CallsState(

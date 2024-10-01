@@ -5,8 +5,8 @@ import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.ScheduleModel
 import com.therxmv.ershu.data.source.remote.ERSHUApi
-import com.therxmv.ershu.utils.MockData
 import com.therxmv.ershu.data.source.remote.Result
+import com.therxmv.ershu.utils.MockData
 
 class ERSHUServiceMock : ERSHUApi {
 
@@ -19,4 +19,6 @@ class ERSHUServiceMock : ERSHUApi {
     override suspend fun getCallSchedule(): Result<AllCallsScheduleModel> = Result.Success(MockData.allCallsScheduleModel)
 
     override suspend fun getLocalCallSchedule(): Result<AllCallsScheduleModel> = Result.Success(MockData.allCallsScheduleModel)
+
+    override suspend fun getRatingBySpecialty(faculty: String, year: String, specialty: String) = Result.Success(MockData.ratingModel)
 }

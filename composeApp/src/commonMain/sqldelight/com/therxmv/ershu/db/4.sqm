@@ -1,0 +1,15 @@
+CREATE TABLE Rating (
+    name TEXT,
+    credits INTEGER,
+    specialty TEXT
+);
+
+DROP TABLE Profile;
+
+CREATE TABLE Profile (
+    name TEXT,
+    year TEXT,
+    facultyPath TEXT,
+    facultyName TEXT,
+    specialtyName TEXT
+);

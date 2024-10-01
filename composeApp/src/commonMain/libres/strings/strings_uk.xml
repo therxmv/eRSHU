@@ -60,4 +60,13 @@
     <string name="home_schedule">Розклад</string>
     <string name="home_profile">Профіль</string>
 
+    <!-- Rating -->
+    <string name="rating_title">Калькулятор рейтингу</string>
+    <string name="rating_input_credits">Кредити:</string>
+    <string name="rating_input_placeholder">Введіть Ваш бал</string>
+    <string name="rating_button_label">Порахувати</string>
+    <string name="rating_result">Ваш рейтинговий бал: </string>
+    <string name="rating_error">Ви ввели некоректні данні</string>
+    <string name="rating_not_available">Ця функція ще не доступна для вашої спеціальності</string>
+
 </resources>

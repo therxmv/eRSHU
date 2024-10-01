@@ -1,0 +1,15 @@
+CREATE TABLE Rating (
+    name TEXT,
+    credits INTEGER,
+    specialty TEXT
+);
+
+getRating:
+SELECT Rating.* FROM Rating WHERE specialty = ?;
+
+setRating:
+INSERT INTO Rating(name, credits, specialty)
+VALUES (?, ?, ?);
+
+clearRating:
+DELETE FROM Rating WHERE specialty = ?;

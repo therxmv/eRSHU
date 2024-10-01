@@ -60,4 +60,13 @@
     <string name="home_schedule">Schedule</string>
     <string name="home_profile">Profile</string>
 
+    <!-- Rating -->
+    <string name="rating_title">Rating calculator</string>
+    <string name="rating_input_credits">Credits:</string>
+    <string name="rating_input_placeholder">Enter your score</string>
+    <string name="rating_button_label">Calculate</string>
+    <string name="rating_result">Your rating score:\n</string>
+    <string name="rating_error">You entered invalid data</string>
+    <string name="rating_not_available">This feature is not yet available for your specialty</string>
+
 </resources>

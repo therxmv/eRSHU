@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
-import com.therxmv.ershu.ui.home.HomeScreen
-import com.therxmv.ershu.ui.theme.AppTheme
-import com.therxmv.ershu.ui.base.ERSHUAppBar
-import com.therxmv.ershu.ui.views.ScreenTitleProvider
 import com.therxmv.ershu.ui.base.BaseScreen
 import com.therxmv.ershu.ui.base.BaseViewModel
+import com.therxmv.ershu.ui.base.ScreenTitleProvider
+import com.therxmv.ershu.ui.base.views.ERSHUAppBar
+import com.therxmv.ershu.ui.home.view.HomeScreen
+import com.therxmv.ershu.ui.theme.AppTheme
 
 @Composable
 internal fun App() = AppTheme {

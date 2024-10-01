@@ -5,6 +5,7 @@ import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
 import com.therxmv.ershu.data.models.LessonModel
+import com.therxmv.ershu.data.models.RatingModel
 import com.therxmv.ershu.data.models.ScheduleModel
 import com.therxmv.ershu.data.source.local.database.ERSHUDatabaseApi
 import io.ktor.client.HttpClient
@@ -16,12 +17,18 @@ class ERSHUService(
     private val ershuDatabaseApi: ERSHUDatabaseApi,
 ) : ERSHUApi {
 
+    companion object {
+        private const val SCHEDULE = "schedule"
+        private const val RATING = "rating"
+        private const val RES = "recours"
+    }
+
     private val apiUrl = BaseUrlProvider.getUrl()
 
     override suspend fun getAllFaculties() = try {
         Result.Success(
             httpClient
-                .get("$apiUrl/all_faculties.json")
+                .get("$apiUrl/$RES/all_faculties.json")
                 .body<AllFacultiesModel>()
                 .also {
                     ershuDatabaseApi.setAllFaculties(it)
@@ -37,7 +44,7 @@ class ERSHUService(
     override suspend fun getAllSpecialties(facultyPath: String) = try {
         Result.Success(
             httpClient
-                .get("$apiUrl/$facultyPath/all_years.json")
+                .get("$apiUrl/$facultyPath/$SCHEDULE/all_years.json")
                 .body<AllSpecialtiesModel>()
                 .also {
                     ershuDatabaseApi.setAllSpecialties(it, facultyPath)
@@ -53,7 +60,7 @@ class ERSHUService(
     override suspend fun getSchedule(facultyPath: String, year: String, specialty: String) = try {
         Result.Success(
             httpClient
-                .get("$apiUrl/$facultyPath/${year}/${specialty}.json")
+                .get("$apiUrl/$facultyPath/$SCHEDULE/$year/$specialty.json")
                 .body<ScheduleModel>()
                 .apply {
                     week = week.mapSchedule()
@@ -71,11 +78,11 @@ class ERSHUService(
 
     override suspend fun getCallSchedule() = try {
         val first = httpClient
-            .get("$apiUrl/fmi_schedule/time1.json")
+            .get("$apiUrl/$RES/time1.json")
             .body<CallScheduleModel>()
 
         val second = httpClient
-            .get("$apiUrl/fmi_schedule/time2.json")
+            .get("$apiUrl/$RES/time2.json")
             .body<CallScheduleModel>()
 
         Result.Success(
@@ -91,6 +98,22 @@ class ERSHUService(
     override suspend fun getLocalCallSchedule() = Result.Failure(
         ershuDatabaseApi.getAllCalls() ?: AllCallsScheduleModel()
     )
+
+    override suspend fun getRatingBySpecialty(faculty: String, year: String, specialty: String) = try {
+        Result.Success(
+            httpClient
+                .get("$apiUrl/$faculty/$RATING/$year/$specialty.json")
+                .body<RatingModel>()
+                .also {
+                    ershuDatabaseApi.setRating(it, specialty)
+                }
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Result.Failure(
+            ershuDatabaseApi.getRating(specialty) ?: RatingModel()
+        )
+    }
 
     private fun List<List<LessonModel>>.mapSchedule() = this.mapIndexed { day, list ->
         list.distinct().mapIndexed { index, item ->

@@ -3,6 +3,7 @@ package com.therxmv.ershu.data.source.local.database
 import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
+import com.therxmv.ershu.data.models.RatingModel
 import com.therxmv.ershu.data.models.ScheduleModel
 
 interface ERSHUDatabaseApi {
@@ -22,4 +23,8 @@ interface ERSHUDatabaseApi {
     fun getAllFaculties(): AllFacultiesModel?
     fun setAllFaculties(allFacultiesModel: AllFacultiesModel)
     fun clearFaculties()
+
+    fun getRating(specialty: String): RatingModel?
+    fun setRating(ratingModel: RatingModel, specialty: String)
+    fun clearRating(specialty: String)
 }

@@ -4,6 +4,7 @@ import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
+import com.therxmv.ershu.data.models.RatingModel
 import com.therxmv.ershu.data.models.ScheduleModel
 import com.therxmv.ershu.data.source.local.DatabaseDriverFactory
 import com.therxmv.ershu.data.source.local.mapper.toDomain
@@ -123,6 +124,25 @@ class ERSHUDatabase(
 
     override fun clearFaculties() {
         database.facultyQueries.clearFaculties()
+    }
+
+    override fun getRating(specialty: String) = RatingModel(
+        database.ratingQueries.getRating(specialty).executeAsList().map { it.toDomain() }
+    )
+
+    override fun setRating(ratingModel: RatingModel, specialty: String) {
+        clearRating(specialty)
+        ratingModel.list.forEach {
+            database.ratingQueries.setRating(
+                name = it.name,
+                credits = it.credits.toLong(),
+                specialty = specialty,
+            )
+        }
+    }
+
+    override fun clearRating(specialty: String) {
+        database.ratingQueries.clearRating(specialty)
     }
 
     private fun List<Lesson>.validate() = if (this.size <= 1) {
