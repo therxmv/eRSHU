@@ -1,6 +1,7 @@
 package com.therxmv.ershu.ui.home.view
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -25,6 +26,10 @@ class HomeScreen : BaseScreen() {
         val uiState by viewModel.uiState.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow
+
+        LaunchedEffect(Unit) {
+            viewModel.setTitle()
+        }
 
         super.BaseContent { modifier ->
             when (uiState) {

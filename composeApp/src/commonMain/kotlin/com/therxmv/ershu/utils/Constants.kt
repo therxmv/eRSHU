@@ -35,3 +35,7 @@ object Analytics {
     const val SCHEDULE_COPY_CLICK = "schedule_copy_click"
     const val SCHEDULE_SWITCH_CLICK = "schedule_switch_click"
 }
+
+object Links {
+    const val RESERVE_LINK = "https://drive.google.com/drive/folders/1pcaDQ4vOiWyAk_DJhyVViK5U-a45n8qn"
+}

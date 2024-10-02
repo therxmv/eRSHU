@@ -42,6 +42,8 @@
         try again
     </string>
     <string name="offline_title">You are offline</string>
+    <string name="offline_open_schedule">Open schedule</string>
+    <string name="offline_schedule_update">Schedule is being updated</string>
 
     <string name="calls_schedule_title">Calls schedule</string>
     <string name="calls_schedule_first_shift">First shift</string>
@@ -68,5 +70,11 @@
     <string name="rating_result">Your rating score:\n</string>
     <string name="rating_error">You entered invalid data</string>
     <string name="rating_not_available">This feature is not yet available for your specialty</string>
+
+    <!-- Exams -->
+    <string name="exams_title">Exams Calendar</string>
+    <string name="exams_list_title">Exams</string>
+    <string name="zalik_list_title">Заліки</string>
+    <string name="exams_no_data">Data is not yet available</string>
 
 </resources>

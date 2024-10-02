@@ -20,18 +20,17 @@ abstract class BaseScreen : Screen {
         val viewModel = getScreenModel<BaseViewModel>()
 
         val callsState by viewModel.callsState.collectAsState()
-        val isOffline by viewModel.isOffline.collectAsState()
+        val offlineState by viewModel.offlineState.collectAsState()
 
-        if (callsState.isDialogVisible) {
-            CallsDialog(
-                callsModel = callsState.callsModel,
-                onDismiss = { toggleDialog() },
-                onCopy = viewModel::copyCallsAnalytics
-            )
-        }
+        CallsDialog(
+            isVisible = callsState.isDialogVisible,
+            callsModel = callsState.callsModel,
+            onDismiss = { toggleDialog() },
+            onCopy = viewModel::copyCallsAnalytics
+        )
 
-        if (isOffline) {
-            OfflineBanner()
+        if (offlineState.isOffline) {
+            OfflineBanner(isBadRequest = offlineState.isBadRequest)
         }
 
         LaunchedEffect(callsState.isDialogVisible) {
@@ -40,6 +39,6 @@ abstract class BaseScreen : Screen {
             }
         }
 
-        childContent(Modifier.padding(top = if (isOffline) 48.dp else 0.dp))
+        childContent(Modifier.padding(top = if (offlineState.isOffline) 86.dp else 0.dp))
     }
 }

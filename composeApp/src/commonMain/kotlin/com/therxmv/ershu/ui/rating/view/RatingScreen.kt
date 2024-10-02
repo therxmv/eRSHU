@@ -19,12 +19,11 @@ import androidx.compose.ui.unit.dp
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.di.getScreenModel
 import com.therxmv.ershu.ui.base.BaseScreen
-import com.therxmv.ershu.ui.base.ScreenTitleProvider
 import com.therxmv.ershu.ui.base.views.ProgressIndicator
 import com.therxmv.ershu.ui.rating.viewmodel.RatingViewModel
 import com.therxmv.ershu.ui.rating.viewmodel.utils.RatingUiState
 
-class RatingScreen : BaseScreen(), ScreenTitleProvider {
+class RatingScreen : BaseScreen() {
 
     override val key = "RatingScreen"
 
@@ -82,6 +81,4 @@ class RatingScreen : BaseScreen(), ScreenTitleProvider {
             )
         }
     }
-
-    override fun getTitle() = Res.string.rating_title
 }

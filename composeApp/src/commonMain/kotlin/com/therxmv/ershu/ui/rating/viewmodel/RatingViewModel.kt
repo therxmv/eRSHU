@@ -2,10 +2,12 @@ package com.therxmv.ershu.ui.rating.viewmodel
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.RatingItem
 import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
-import com.therxmv.ershu.data.source.remote.isFailure
+import com.therxmv.ershu.data.source.remote.Result
+import com.therxmv.ershu.ui.base.AppbarTitleStore
 import com.therxmv.ershu.ui.base.ViewModelDisposer
 import com.therxmv.ershu.ui.rating.viewmodel.utils.InputState
 import com.therxmv.ershu.ui.rating.viewmodel.utils.RatingState
@@ -18,6 +20,7 @@ import kotlinx.coroutines.launch
 class RatingViewModel(
     private val ershuApi: ERSHUApi,
     private val profileLocalSourceApi: ProfileLocalSourceApi,
+    appbarTitleStore: AppbarTitleStore,
 ) : ScreenModel, ViewModelDisposer {
 
     private val _uiState = MutableStateFlow<RatingUiState>(RatingUiState.Loading)
@@ -29,6 +32,10 @@ class RatingViewModel(
     private val _ratingState = MutableStateFlow<RatingState>(RatingState.Initial)
     val ratingState = _ratingState.asStateFlow()
 
+    init {
+        appbarTitleStore.titleFlow.update { Res.string.rating_title }
+    }
+
     fun loadData() {
         screenModelScope.launch {
             val profile = profileLocalSourceApi.getProfileInfo()
@@ -39,7 +46,7 @@ class RatingViewModel(
             )
             val rating = result.value
 
-            if (result.isFailure()) {
+            if (result is Result.Failure) {
                 _uiState.update { RatingUiState.NotAvailable }
             } else {
                 if (_inputsState.value.isEmpty()) {

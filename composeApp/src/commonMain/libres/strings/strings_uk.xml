@@ -42,6 +42,8 @@
         ще раз
     </string>
     <string name="offline_title">Ви перебуваєте в офлайн режимі</string>
+    <string name="offline_open_schedule">Відкрити розклад</string>
+    <string name="offline_schedule_update">Розклад оновлюється</string>
 
     <string name="calls_schedule_title">Розклад дзвінків</string>
     <string name="calls_schedule_first_shift">Перша зміна</string>
@@ -68,5 +70,11 @@
     <string name="rating_result">Ваш рейтинговий бал: </string>
     <string name="rating_error">Ви ввели некоректні данні</string>
     <string name="rating_not_available">Ця функція ще не доступна для вашої спеціальності</string>
+
+    <!-- Exams -->
+    <string name="exams_title">Календар екзаменів</string>
+    <string name="exams_list_title">Екзамени</string>
+    <string name="zalik_list_title">Заліки</string>
+    <string name="exams_no_data">Поки що немає даних</string>
 
 </resources>

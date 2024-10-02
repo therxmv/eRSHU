@@ -18,7 +18,7 @@ class ERSHUServiceMock : ERSHUApi {
 
     override suspend fun getCallSchedule(): Result<AllCallsScheduleModel> = Result.Success(MockData.allCallsScheduleModel)
 
-    override suspend fun getLocalCallSchedule(): Result<AllCallsScheduleModel> = Result.Success(MockData.allCallsScheduleModel)
-
     override suspend fun getRatingBySpecialty(faculty: String, year: String, specialty: String) = Result.Success(MockData.ratingModel)
+
+    override suspend fun getExamCalendar(faculty: String, year: String, specialty: String) = Result.Success(MockData.examCalendar)
 }

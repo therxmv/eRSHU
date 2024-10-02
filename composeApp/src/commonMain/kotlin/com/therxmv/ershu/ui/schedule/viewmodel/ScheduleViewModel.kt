@@ -2,6 +2,7 @@ package com.therxmv.ershu.ui.schedule.viewmodel
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.therxmv.ershu.Res
 import com.therxmv.ershu.analytics.AnalyticsApi
 import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.reminders.RemindersApi
@@ -10,8 +11,8 @@ import com.therxmv.ershu.data.reminders.event.model.ReminderModel
 import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.local.reminders.RemindersLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
-import com.therxmv.ershu.data.source.remote.isFailure
-import com.therxmv.ershu.db.Profile
+import com.therxmv.ershu.data.source.remote.Result
+import com.therxmv.ershu.ui.base.AppbarTitleStore
 import com.therxmv.ershu.ui.base.BaseViewModel
 import com.therxmv.ershu.ui.base.ViewModelDisposer
 import com.therxmv.ershu.ui.schedule.viewmodel.utils.ScheduleUiEvent
@@ -35,6 +36,7 @@ class ScheduleViewModel(
     private val remindersLocalSourceApi: RemindersLocalSourceApi,
     private val profileLocalSourceApi: ProfileLocalSourceApi,
     private val analyticsApi: AnalyticsApi,
+    private val appbarTitleStore: AppbarTitleStore,
 ) : ScreenModel, ViewModelDisposer {
 
     private val _uiState = MutableStateFlow<ScheduleUiState>(Loading)
@@ -53,8 +55,12 @@ class ScheduleViewModel(
         _uiState.update { Loading }
     }
 
-    fun loadData(data: Profile?) {
-        val profile = data ?: profileLocalSourceApi.getProfileInfo()
+    fun loadData() {
+        val profile = profileLocalSourceApi.getProfileInfo()
+
+        appbarTitleStore.titleFlow.update {
+            "${Res.string.schedule_title} ${profile?.specialtyName.orEmpty()}"
+        }
 
         screenModelScope.launch {
             delay(150)
@@ -67,7 +73,12 @@ class ScheduleViewModel(
 
             analyticsApi.scheduleOpened(profile?.facultyName.orEmpty(), profile?.specialtyName.orEmpty())
             _uiState.update { Success(schedule) }
-            BaseViewModel.setChildIsOffline(result.isFailure())
+
+            val failure = result as? Result.Failure
+            BaseViewModel.setChildIsOffline(
+                isOffline = failure != null,
+                isBadRequest = failure?.isBadRequest ?: false,
+            )
 
             if (_expandedList.value.isEmpty()) {
                 _expandedList.update {

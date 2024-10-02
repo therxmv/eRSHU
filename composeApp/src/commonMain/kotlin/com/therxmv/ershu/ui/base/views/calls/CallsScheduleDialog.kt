@@ -10,10 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,26 +23,24 @@ import androidx.compose.ui.unit.dp
 import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.ui.base.views.ProgressIndicator
+import com.therxmv.ershu.ui.base.views.dialog.RshuDialog
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CallsDialog(
+    isVisible: Boolean,
     callsModel: AllCallsScheduleModel?,
     onDismiss: () -> Unit,
     onCopy: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
+    RshuDialog(
+        isVisible = isVisible,
+        onDismiss = onDismiss,
     ) {
-        Surface(
-            shape = MaterialTheme.shapes.large
-        ) {
-            CallsDialogContent(
-                callsModel = callsModel,
-                onDismiss = onDismiss,
-                onCopy = onCopy,
-            )
-        }
+        CallsDialogContent(
+            callsModel = callsModel,
+            onDismiss = onDismiss,
+            onCopy = onCopy,
+        )
     }
 }
 

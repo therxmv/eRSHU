@@ -2,11 +2,13 @@ package com.therxmv.ershu.ui.specialtyinfo.viewmodel
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.therxmv.ershu.Res
 import com.therxmv.ershu.analytics.AnalyticsApi
 import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
-import com.therxmv.ershu.data.source.remote.isFailure
+import com.therxmv.ershu.data.source.remote.Result
 import com.therxmv.ershu.db.Profile
+import com.therxmv.ershu.ui.base.AppbarTitleStore
 import com.therxmv.ershu.ui.base.BaseViewModel
 import com.therxmv.ershu.ui.specialtyinfo.viewmodel.utils.SelectedFieldsState
 import com.therxmv.ershu.ui.specialtyinfo.viewmodel.utils.SpecialtyInfoDropdown
@@ -22,6 +24,7 @@ class SpecialtyInfoViewModel(
     private val ershuApi: ERSHUApi,
     private val profileLocalSourceApi: ProfileLocalSourceApi,
     private val analyticsApi: AnalyticsApi,
+    private val appbarTitleStore: AppbarTitleStore,
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(SpecialtyInfoUiState())
@@ -43,6 +46,16 @@ class SpecialtyInfoViewModel(
     val expandedMap = _expandedMap.asStateFlow()
 
     private var profile: Profile? = null
+
+    fun setTitle(isFirstLaunch: Boolean, isSwapAction: Boolean) {
+        val title = when {
+            isFirstLaunch -> Res.string.specialtyinfo_title
+            isSwapAction -> Res.string.specialtyinfo_change
+            else -> Res.string.specialtyinfo_edit
+        }
+
+        appbarTitleStore.titleFlow.update { title }
+    }
 
     fun setProfileData(data: Profile?) {
         profile = data ?: profileLocalSourceApi.getProfileInfo()
@@ -156,7 +169,11 @@ class SpecialtyInfoViewModel(
             it.copy(facultiesList = allFaculties)
         }
 
-        BaseViewModel.setChildIsOffline(result.isFailure())
+        val failure = result as? Result.Failure
+        BaseViewModel.setChildIsOffline(
+            isOffline = failure != null,
+            isBadRequest = failure?.isBadRequest ?: false,
+        )
 
         _selectedState.update { state ->
             state.copy(
@@ -185,7 +202,11 @@ class SpecialtyInfoViewModel(
             )
         }
 
-        BaseViewModel.setChildIsOffline(result.isFailure())
+        val failure = result as? Result.Failure
+        BaseViewModel.setChildIsOffline(
+            isOffline = failure != null,
+            isBadRequest = failure?.isBadRequest ?: false,
+        )
 
         _selectedState.update { state ->
             state.copy(

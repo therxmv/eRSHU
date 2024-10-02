@@ -84,8 +84,8 @@ android {
         targetSdk = 34
 
         applicationId = "com.therxmv.ershu.androidApp"
-        versionCode = 143
-        versionName = "1.4.3"
+        versionCode = 150
+        versionName = "1.5.0"
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")

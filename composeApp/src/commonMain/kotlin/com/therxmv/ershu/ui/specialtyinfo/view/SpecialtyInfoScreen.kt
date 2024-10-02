@@ -9,13 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalFocusManager
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.ProfileUiData
 import com.therxmv.ershu.data.models.toProfile
 import com.therxmv.ershu.data.models.toUiData
 import com.therxmv.ershu.di.getScreenModel
 import com.therxmv.ershu.ui.base.BaseScreen
-import com.therxmv.ershu.ui.base.ScreenTitleProvider
 import com.therxmv.ershu.ui.base.views.ProgressIndicator
 import com.therxmv.ershu.ui.home.view.HomeScreen
 import com.therxmv.ershu.ui.schedule.view.ScheduleScreen
@@ -26,7 +24,7 @@ import com.therxmv.ershu.ui.specialtyinfo.viewmodel.utils.SpecialtyInfoUiEvent
 class SpecialtyInfoScreen(
     private val isClearStack: Boolean = false,
     private val tempProfile: ProfileUiData? = null,
-) : BaseScreen(), ScreenTitleProvider {
+) : BaseScreen() {
 
     override val key = "SpecialtyInfoScreen"
 
@@ -44,6 +42,7 @@ class SpecialtyInfoScreen(
         val isSpecialtyExpanded = expandedState[SpecialtyInfoDropdown.SPECIALTY] == true
 
         LaunchedEffect(Unit) {
+            viewModel.setTitle(isFirstLaunch = isClearStack, isSwapAction = tempProfile != null)
             viewModel.setProfileData(tempProfile?.toProfile())
         }
 
@@ -111,12 +110,6 @@ class SpecialtyInfoScreen(
                 }
             }
         }
-    }
-
-    override fun getTitle() = when {
-        isClearStack -> Res.string.specialtyinfo_title
-        tempProfile != null -> Res.string.specialtyinfo_change
-        else -> Res.string.specialtyinfo_edit
     }
 }
 

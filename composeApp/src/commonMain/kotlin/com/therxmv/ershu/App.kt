@@ -5,25 +5,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
+import com.therxmv.ershu.di.getDependency
+import com.therxmv.ershu.ui.base.AppbarTitleStore
 import com.therxmv.ershu.ui.base.BaseScreen
 import com.therxmv.ershu.ui.base.BaseViewModel
-import com.therxmv.ershu.ui.base.ScreenTitleProvider
 import com.therxmv.ershu.ui.base.views.ERSHUAppBar
 import com.therxmv.ershu.ui.home.view.HomeScreen
 import com.therxmv.ershu.ui.theme.AppTheme
 
 @Composable
-internal fun App() = AppTheme {
-
+internal fun App(
+    appbarTitleProvider: AppbarTitleStore = getDependency(),
+) = AppTheme {
     Navigator(HomeScreen()) { navigator ->
+        val titleFlow = appbarTitleProvider.titleFlow.collectAsState().value
         Scaffold(
             topBar = {
                 ERSHUAppBar(
                     canPop = navigator.canPop,
-                    title = navigator.getAppBarTitle(),
+                    title = titleFlow,
                     onBackClick = {
                         navigator.pop()
                     },
@@ -45,9 +49,4 @@ internal fun App() = AppTheme {
 fun Navigator.getBellClick() = when(this.lastItem) {
     is BaseScreen -> BaseViewModel::toggleDialog
     else -> null
-}
-
-fun Navigator.getAppBarTitle() = when(this.lastItem) {
-    is ScreenTitleProvider -> (this.lastItem as ScreenTitleProvider).getTitle()
-    else -> Res.string.app_name
 }

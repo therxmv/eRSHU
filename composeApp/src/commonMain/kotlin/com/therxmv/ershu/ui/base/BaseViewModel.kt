@@ -4,7 +4,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import com.therxmv.ershu.analytics.AnalyticsApi
 import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.source.remote.ERSHUApi
-import com.therxmv.ershu.data.source.remote.isFailure
+import com.therxmv.ershu.data.source.remote.Result
 import com.therxmv.ershu.utils.Analytics.CALLS_CLICK
 import com.therxmv.ershu.utils.Analytics.CALLS_COPY_CLICK
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +17,10 @@ class BaseViewModel(
 ) : ScreenModel {
 
     val callsState = _callsState.asStateFlow()
-    val isOffline = _isOffline.asStateFlow()
+    val offlineState = _offlineState.asStateFlow()
 
     companion object {
-        private val _isOffline = MutableStateFlow(false)
+        private val _offlineState = MutableStateFlow(OfflineState())
         private val _callsState = MutableStateFlow(CallsState())
 
         fun toggleDialog() {
@@ -31,8 +31,13 @@ class BaseViewModel(
             }
         }
 
-        fun setChildIsOffline(value: Boolean) {
-            _isOffline.update { value }
+        fun setChildIsOffline(isOffline: Boolean, isBadRequest: Boolean) {
+            _offlineState.update {
+                OfflineState(
+                    isOffline = isOffline,
+                    isBadRequest = isBadRequest,
+                )
+            }
         }
     }
 
@@ -47,7 +52,11 @@ class BaseViewModel(
                 )
             }
 
-            _isOffline.update { callsSchedule.isFailure() }
+            val failure = callsSchedule as? Result.Failure
+            setChildIsOffline(
+                isOffline = failure != null,
+                isBadRequest = failure?.isBadRequest ?: false,
+            )
         }
     }
 
@@ -58,5 +67,10 @@ class BaseViewModel(
     data class CallsState(
         val callsModel: AllCallsScheduleModel? = null,
         val isDialogVisible: Boolean = false,
+    )
+
+    data class OfflineState(
+        val isOffline: Boolean = false,
+        val isBadRequest: Boolean = false,
     )
 }

@@ -14,12 +14,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.therxmv.ershu.Res
 import com.therxmv.ershu.data.models.ProfileUiData
-import com.therxmv.ershu.data.models.toProfile
 import com.therxmv.ershu.di.getScreenModel
 import com.therxmv.ershu.ui.base.BaseScreen
-import com.therxmv.ershu.ui.base.ScreenTitleProvider
 import com.therxmv.ershu.ui.base.views.ProgressIndicator
 import com.therxmv.ershu.ui.base.views.reminders.RemindersPermissionDialog
 import com.therxmv.ershu.ui.schedule.viewmodel.ScheduleViewModel
@@ -30,7 +27,7 @@ import com.therxmv.ershu.utils.Analytics.SCHEDULE_SWITCH_CLICK
 
 class ScheduleScreen(
     private val profile: ProfileUiData?,
-) : BaseScreen(), ScreenTitleProvider {
+) : BaseScreen() {
 
     override val key = "ScheduleScreen"
 
@@ -46,7 +43,7 @@ class ScheduleScreen(
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
-            viewModel.loadData(profile?.toProfile())
+            viewModel.loadData()
         }
 
         DisposableEffect(Unit) {
@@ -56,16 +53,15 @@ class ScheduleScreen(
         }
 
         super.BaseContent {
-            if (permissionDialogState) {
-                RemindersPermissionDialog(
-                    onClick = {
-                        viewModel.onEvent(ScheduleUiEvent.PermissionDialogAction())
-                    },
-                    onDismiss = {
-                        viewModel.onEvent(ScheduleUiEvent.PermissionDialogAction(true))
-                    },
-                )
-            }
+            RemindersPermissionDialog(
+                isVisible = permissionDialogState,
+                onClick = {
+                    viewModel.onEvent(ScheduleUiEvent.PermissionDialogAction())
+                },
+                onDismiss = {
+                    viewModel.onEvent(ScheduleUiEvent.PermissionDialogAction(true))
+                },
+            )
 
             AnimatedContent(
                 targetState = uiState,
@@ -101,6 +97,4 @@ class ScheduleScreen(
             }
         }
     }
-
-    override fun getTitle() = "${Res.string.schedule_title} ${profile?.specialtyName.orEmpty()}"
 }

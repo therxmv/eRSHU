@@ -9,5 +9,6 @@ sealed class HomeUiEvent {
 enum class HomeItems {
     SCHEDULE,
     PROFILE,
+    EXAMS,
     RATING,
 }

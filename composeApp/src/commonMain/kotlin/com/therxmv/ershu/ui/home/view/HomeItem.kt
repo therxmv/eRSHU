@@ -3,16 +3,15 @@ package com.therxmv.ershu.ui.home.view
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +33,6 @@ data class HomeItemModel(
     val icon: ImageVector,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeItem(
     item: HomeItemModel,
@@ -51,35 +50,32 @@ fun HomeItem(
         )
     }
 
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .scale(scale.value)
-            .aspectRatio(1f),
-        onClick = {
-            onItemClick(item.id)
-        },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-        ),
+            .aspectRatio(1f)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .clickable {
+                onItemClick(item.id)
+            },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Icon(
-                modifier = Modifier
-                    .padding(12.dp)
-                    .size(36.dp),
-                imageVector = item.icon,
-                contentDescription = "Icon",
-            )
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-            )
-        }
+        Icon(
+            modifier = Modifier
+                .padding(12.dp)
+                .size(36.dp),
+            imageVector = item.icon,
+            contentDescription = "Icon",
+        )
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 12.dp),
+            text = item.title,
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center,
+        )
     }
 }

@@ -5,6 +5,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.therxmv.ershu.ui.base.BaseViewModel
+import com.therxmv.ershu.ui.exam.viewmodel.ExamCalendarViewModel
 import com.therxmv.ershu.ui.home.viewmodel.HomeViewModel
 import com.therxmv.ershu.ui.profile.viewmodel.ProfileViewModel
 import com.therxmv.ershu.ui.rating.viewmodel.RatingViewModel
@@ -25,16 +26,16 @@ inline fun <reified T : ScreenModel> Screen.getScreenModel(
 }
 
 val viewModelModule = module {
-    single { // TODO maybe make single and implement refresh
-        ScheduleViewModel(get(), get(), get(), get(), get(), get())
+    single {
+        ScheduleViewModel(get(), get(), get(), get(), get(), get(), get())
     }
 
     factory {
-        SpecialtyInfoViewModel(get(), get(), get())
+        SpecialtyInfoViewModel(get(), get(), get(), get())
     }
 
     factory {
-        HomeViewModel(get(), get())
+        HomeViewModel(get(), get(), get())
     }
 
     single {
@@ -42,10 +43,14 @@ val viewModelModule = module {
     }
 
     single {
-        ProfileViewModel(get())
+        ProfileViewModel(get(), get())
     }
 
     single {
-        RatingViewModel(get(), get())
+        RatingViewModel(get(), get(), get())
+    }
+
+    single {
+        ExamCalendarViewModel(get(), get(), get())
     }
 }

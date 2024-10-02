@@ -4,6 +4,8 @@ import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
+import com.therxmv.ershu.data.models.Exam
+import com.therxmv.ershu.data.models.ExamCalendarModel
 import com.therxmv.ershu.data.models.FacultyModel
 import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.models.RatingItem
@@ -88,6 +90,53 @@ object MockData {
             RatingItem(
                 name = "Інтерфейси користувача та системні інтерфейси",
                 credits = 4,
+            ),
+        )
+    )
+
+    val examCalendar = ExamCalendarModel(
+        exams = listOf(
+            Exam(
+                teacher = "доц. Пелех О.Б.",
+                lesson = "Економіка і право в IT-галузі",
+                date = "19.11",
+            ),
+            Exam(
+                teacher = "проф.Турбал Ю.В.",
+                lesson = "Якість і тестування програмного забезпечення",
+                date = "25.11",
+            ),
+            Exam(
+                teacher = "в.Копелюк В.О",
+                lesson = "Конструювання програмного забезпечення",
+                date = "29.11",
+            ),
+        ),
+        zalik = listOf(
+            Exam(
+                teacher = null,
+                lesson = "Курсова робота",
+                date = null,
+            ),
+            Exam(
+                teacher = null,
+                lesson = "Технологічна практика",
+                date = null,
+            ),
+            Exam(
+                teacher = null,
+                lesson = "Основи стандартизації та патентознавства",
+                date = null,
+            ),
+            Exam(
+                teacher = null,
+                lesson = "Іноземна мова для науково-дослідної комунікації",
+                date = null,
+            ),
+            Exam(
+                teacher = null,
+                lesson = "Хмарні обчислення та технології",
+                date = null,
             ),
         )
     )

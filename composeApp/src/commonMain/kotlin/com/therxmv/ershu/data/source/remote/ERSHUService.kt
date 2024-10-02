@@ -4,11 +4,13 @@ import com.therxmv.ershu.data.models.AllCallsScheduleModel
 import com.therxmv.ershu.data.models.AllFacultiesModel
 import com.therxmv.ershu.data.models.AllSpecialtiesModel
 import com.therxmv.ershu.data.models.CallScheduleModel
+import com.therxmv.ershu.data.models.ExamCalendarModel
 import com.therxmv.ershu.data.models.LessonModel
 import com.therxmv.ershu.data.models.RatingModel
 import com.therxmv.ershu.data.models.ScheduleModel
 import com.therxmv.ershu.data.source.local.database.ERSHUDatabaseApi
 import io.ktor.client.HttpClient
+import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 
@@ -21,6 +23,7 @@ class ERSHUService(
         private const val SCHEDULE = "schedule"
         private const val RATING = "rating"
         private const val RES = "recours"
+        private const val EXAMS = "exams"
     }
 
     private val apiUrl = BaseUrlProvider.getUrl()
@@ -35,10 +38,9 @@ class ERSHUService(
                 }
         )
     } catch (e: Exception) {
-        e.printStackTrace()
-        Result.Failure(
+        e.handleException {
             ershuDatabaseApi.getAllFaculties() ?: AllFacultiesModel()
-        )
+        }
     }
 
     override suspend fun getAllSpecialties(facultyPath: String) = try {
@@ -51,10 +53,9 @@ class ERSHUService(
                 }
         )
     } catch (e: Exception) {
-        e.printStackTrace()
-        Result.Failure(
+        e.handleException {
             ershuDatabaseApi.getAllSpecialties(facultyPath) ?: AllSpecialtiesModel()
-        )
+        }
     }
 
     override suspend fun getSchedule(facultyPath: String, year: String, specialty: String) = try {
@@ -70,10 +71,9 @@ class ERSHUService(
                 }
         )
     } catch (e: Exception) {
-        e.printStackTrace()
-        Result.Failure(
+        e.handleException {
             ershuDatabaseApi.getSchedule(specialty) ?: ScheduleModel()
-        )
+        }
     }
 
     override suspend fun getCallSchedule() = try {
@@ -91,13 +91,10 @@ class ERSHUService(
             }
         )
     } catch (e: Exception) {
-        e.printStackTrace()
-        getLocalCallSchedule()
+        e.handleException {
+            ershuDatabaseApi.getAllCalls() ?: AllCallsScheduleModel()
+        }
     }
-
-    override suspend fun getLocalCallSchedule() = Result.Failure(
-        ershuDatabaseApi.getAllCalls() ?: AllCallsScheduleModel()
-    )
 
     override suspend fun getRatingBySpecialty(faculty: String, year: String, specialty: String) = try {
         Result.Success(
@@ -109,9 +106,29 @@ class ERSHUService(
                 }
         )
     } catch (e: Exception) {
-        e.printStackTrace()
-        Result.Failure(
+        e.handleException {
             ershuDatabaseApi.getRating(specialty) ?: RatingModel()
+        }
+    }
+
+    override suspend fun getExamCalendar(faculty: String, year: String, specialty: String): Result<ExamCalendarModel> = try {
+        Result.Success(
+            httpClient
+                .get("$apiUrl/$faculty/$EXAMS/$year/$specialty.json")
+                .body<ExamCalendarModel>()
+        )
+    } catch (e: Exception) {
+        e.handleException {
+            ExamCalendarModel()
+        }
+    }
+
+    private fun <T> Exception.handleException(defaultValue: () -> T): Result<T> {
+        printStackTrace()
+        val isInvalidRequest = this is NoTransformationFoundException
+        return Result.Failure(
+            value = defaultValue(),
+            isBadRequest = isInvalidRequest,
         )
     }
 

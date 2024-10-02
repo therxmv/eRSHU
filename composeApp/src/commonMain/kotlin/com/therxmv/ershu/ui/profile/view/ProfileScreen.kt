@@ -9,17 +9,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.therxmv.ershu.Res
 import com.therxmv.ershu.di.getScreenModel
 import com.therxmv.ershu.ui.base.BaseScreen
-import com.therxmv.ershu.ui.base.ScreenTitleProvider
 import com.therxmv.ershu.ui.base.views.ProgressIndicator
 import com.therxmv.ershu.ui.profile.viewmodel.ProfileViewModel
 import com.therxmv.ershu.ui.profile.viewmodel.utils.ProfileUiState.Loading
 import com.therxmv.ershu.ui.profile.viewmodel.utils.ProfileUiState.Ready
 import com.therxmv.ershu.ui.specialtyinfo.view.SpecialtyInfoScreen
 
-class ProfileScreen : BaseScreen(), ScreenTitleProvider {
+class ProfileScreen : BaseScreen() {
 
     override val key = "ProfileScreen"
 
@@ -62,6 +60,4 @@ class ProfileScreen : BaseScreen(), ScreenTitleProvider {
             }
         }
     }
-
-    override fun getTitle() = Res.string.profile_title
 }
