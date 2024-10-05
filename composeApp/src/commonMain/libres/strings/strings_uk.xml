@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">єРДГУ</string>
+    <string name="app_name">eRSHU</string>
 
     <!--Profile-->
     <string name="profile_title">Ваш профіль</string>
-    <string name="profile_welcome">Вітаємо, студенте РДГУ!</string>
+    <string name="profile_welcome">Вітаємо, студенте!</string>
     <string name="profile_faculty_title">Факультет:</string>
     <string name="profile_specialty_title">Спеціальність:</string>
     <string name="profile_edit_button">Редагувати</string>
@@ -54,7 +54,7 @@
     <!-- Reminders -->
     <string name="reminder_title">Починається пара!</string>
     <string name="reminders_dialog_title">Дозвіл на нагадування</string>
-    <string name="reminders_dialog_description">Будь ласка, дозвольте єРДГУ надсилати вам сповіщення про майбутні пари</string>
+    <string name="reminders_dialog_description">Будь ласка, дозвольте eRSHU надсилати вам сповіщення про майбутні пари</string>
     <string name="reminders_dialog_grant">Дозволити</string>
     <string name="reminders_dialog_deny">Заборонити</string>
 

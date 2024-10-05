@@ -130,4 +130,4 @@ private fun getDayItemColor(isEmpty: Boolean) =
     )
 
 private fun getTextToCopy(list: List<LessonModel>, dayName: String) =
-    "$dayName\n${list.joinToString("\n") { it.toText() }}\n\nСкопійовано з єРДГУ play.google.com/store/apps/details?id=com.therxmv.ershu.androidApp"
+    "$dayName\n${list.joinToString("\n") { it.toText() }}\n\nСкопійовано з eRSHU play.google.com/store/apps/details?id=com.therxmv.ershu.androidApp"

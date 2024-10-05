@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.therxmv.ershu.data.models.ProfileUiData
+import com.therxmv.ershu.data.models.toProfile
 import com.therxmv.ershu.di.getScreenModel
 import com.therxmv.ershu.ui.base.BaseScreen
 import com.therxmv.ershu.ui.base.views.ProgressIndicator
@@ -43,7 +44,7 @@ class ScheduleScreen(
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
-            viewModel.loadData()
+            viewModel.loadData(profile?.toProfile())
         }
 
         DisposableEffect(Unit) {

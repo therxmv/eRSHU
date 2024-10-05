@@ -12,6 +12,7 @@ import com.therxmv.ershu.data.source.local.profile.ProfileLocalSourceApi
 import com.therxmv.ershu.data.source.local.reminders.RemindersLocalSourceApi
 import com.therxmv.ershu.data.source.remote.ERSHUApi
 import com.therxmv.ershu.data.source.remote.Result
+import com.therxmv.ershu.db.Profile
 import com.therxmv.ershu.ui.base.AppbarTitleStore
 import com.therxmv.ershu.ui.base.BaseViewModel
 import com.therxmv.ershu.ui.base.ViewModelDisposer
@@ -55,8 +56,8 @@ class ScheduleViewModel(
         _uiState.update { Loading }
     }
 
-    fun loadData() {
-        val profile = profileLocalSourceApi.getProfileInfo()
+    fun loadData(data: Profile?) {
+        val profile = data ?: profileLocalSourceApi.getProfileInfo()
 
         appbarTitleStore.titleFlow.update {
             "${Res.string.schedule_title} ${profile?.specialtyName.orEmpty()}"
